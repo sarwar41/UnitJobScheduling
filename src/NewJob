@@ -225,7 +225,7 @@ public class NewJob extends JFrame implements ActionListener {
 			
 			try {
 				Conn conn = new Conn(); 
-				String query = "insert into tasks values('"+task1+"', '"+taskype1+"', '"+startDate1+"', '"+endDate1+"', '"+status1+"', '"+priority1+"', '"+description1+"',   )";
+				String query = "insert into tasks values('"+task1+"', '"+taskype1+"', '"+startDate1+"', '"+endDate1+"', '"+status1+"', '"+priority1+"', '"+description1+"')";
 				conn.stm.executeUpdate(query);
 				JOptionPane.showMessageDialog(null, "Details are added Successfully");
 				setVisible(false); 
