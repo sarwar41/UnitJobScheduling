@@ -75,7 +75,7 @@ class SignUp extends JFrame
 			public void actionPerformed(ActionEvent e)
 			{
 
-				Signin si=new Signin();
+				SignIn si=new SignIn();
 				si.setVisible(true);
 				SignUp.this.setVisible(false);
 			}

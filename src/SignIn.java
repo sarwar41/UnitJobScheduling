@@ -3,7 +3,7 @@ import javax.swing.*;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.*;
-class Signin extends JFrame
+class SignIn extends JFrame
 {
 	
 	private JPanel panel;
@@ -12,7 +12,7 @@ class Signin extends JFrame
 	private JPasswordField textPassword;
 	private JButton buttonLogin, buttonCancel;
 	
-	public Signin()
+	public SignIn()
 	{
 		this.InitializeComponents();
 	}
@@ -62,6 +62,9 @@ class Signin extends JFrame
 				boolean resp = api.isUserValid(username,password);
 				if(resp) {
 					utils.saveUserloggedInData("yes");
+					Home hm=new Home();
+					hm.setVisible(true);
+					SignIn.this.setVisible(false);
 				}else {
 					JOptionPane.showMessageDialog(null, "You've entered wrong email and password", "Message", JOptionPane.INFORMATION_MESSAGE);
 				}
@@ -80,11 +83,9 @@ class Signin extends JFrame
 			public void actionPerformed(ActionEvent e)
 			{
 
-				Utils utils = new Utils();
-				utils.saveUserloggedInData("No");
-//				SignUp su=new SignUp();
-//				su.setVisible(true);
-//				Signin.this.setVisible(false);
+				SignUp su=new SignUp();
+				su.setVisible(true);
+				SignIn.this.setVisible(false);
 			}
 		});
 		this.panel.add(this.buttonCancel);
