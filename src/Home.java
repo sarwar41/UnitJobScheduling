@@ -1,96 +1,79 @@
-
-import javax.swing.*;
 import java.awt.Color;
-import java.awt.Image;
-import java.awt.event.*;
-class Home extends JFrame
-{
-	
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+public class Home extends JFrame implements ActionListener {
+
+	JButton addJob, viewJob, updateJob, deleteJob;
+
 	private JPanel panel;
-	private JLabel labelUsername, labelPassword,labelimg;
-	private JTextField textUsername;
-	private JPasswordField textPassword;
-	private JButton buttonLogin, buttonCancel;
-	
-	public Home()
-	{
-		this.InitializeComponents();
-	}
-	
-	private void InitializeComponents()
-	{
+
+	Home() {
+
 		this.panel = new JPanel();
 		this.panel.setLayout(null);
 		this.panel.setBackground(Color.white);
-		
-		this.labelUsername = new JLabel("Home");
-		this.labelUsername.setBounds(220, 80, 80, 20);
-		this.panel.add(this.labelUsername);
-		
-		
-		
-		
-//		this.buttonLogin = new JButton("Sign In");
-//		this.buttonLogin.setBounds(350, 160, 120, 30);
-//		this.buttonLogin.addActionListener(new ActionListener()
-//		{
-//			@Override
-//			public void actionPerformed(ActionEvent e)
-//			{	
-//				String username = textUsername.getText();
-//				String password = textPassword.getText();
-//				
-//				Utils utils = new Utils();
-//				boolean email_verified = utils.isEmailValid(username);
-//				if(!email_verified) {
-//					JOptionPane.showMessageDialog(null, "Your provided email is not a valid email, Please Provide a valid email.", "Message", JOptionPane.INFORMATION_MESSAGE);
-//					return ;
-//				}
-//				DataAccess api = new DataAccess();
-//				boolean resp = api.isUserValid(username,password);
-//				if(resp) {
-//					utils.saveUserloggedInData("yes");
-//				}else {
-//					JOptionPane.showMessageDialog(null, "You've entered wrong email and password", "Message", JOptionPane.INFORMATION_MESSAGE);
-//				}
-//				
-//			}
-//			
-//		}
-//			
-//				);
-//		
-//		this.buttonCancel = new JButton("Don't have an account?Create a New Account.");
-//		this.buttonCancel.setBounds(220, 200, 350, 30);
-//		this.buttonCancel.addActionListener(new ActionListener()
-//		{
-//			@Override
-//			public void actionPerformed(ActionEvent e)
-//			{
-//
-//				Utils utils = new Utils();
-//				utils.saveUserloggedInData("No");
-////				SignUp su=new SignUp();
-////				su.setVisible(true);
-////				Signin.this.setVisible(false);
-//			}
-//		});
-//		this.panel.add(this.buttonCancel);
-//		
-//		
-//		
-//		this.panel.add(this.buttonLogin);
-//		
+
+		getContentPane().setBackground(Color.WHITE);
+		setLayout(null);
+
+		JLabel heading = new JLabel("Jobs Scheduler");
+		heading.setBounds(300, 20, 400, 40);
+		heading.setFont(new Font("Candela", Font.BOLD, 25));
+		add(heading);
+
+		addJob = new JButton("Add New Job");
+		addJob.setBounds(50, 80, 150, 40);
+		addJob.addActionListener(this);
+		add(addJob);
+
+		viewJob = new JButton("View my Jobs");
+		viewJob.setBounds(50, 140, 150, 40);
+		viewJob.addActionListener(this);
+		add(viewJob);
+
+		updateJob = new JButton("Edit Jobs");
+		updateJob.setBounds(50, 200, 150, 40);
+		updateJob.addActionListener(this);
+		add(updateJob);
+
+		deleteJob = new JButton("Delete Jobs");
+		deleteJob.setBounds(50, 260, 150, 40);
+		deleteJob.addActionListener(this);
+		add(deleteJob);
+
 		this.add(this.panel);
-		
-		
-		
-		
-		
-		this.setSize(600, 400);
+
+		this.setSize(800, 600);
 		this.setLocationRelativeTo(null);
-		this.setTitle("User Signup");
+		this.setTitle("Job Scheduler");
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
+	public void actionPerformed(ActionEvent ae) {
+
+		if (ae.getSource() == addJob) {
+			System.out.println("addjobs pressed");
+			NewJob nj = new NewJob();
+			nj.setVisible(true);
+			Home.this.setVisible(false);
+		} else if (ae.getSource() == viewJob) {
+			ViewJob vj = new ViewJob();
+			vj.setVisible(true);
+			Home.this.setVisible(false);
+		} else if (ae.getSource() == updateJob) {
+
+		} else if (ae.getSource() == deleteJob) {
+
+		} else {
+
+		}
 	}
 }
