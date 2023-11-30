@@ -29,6 +29,9 @@ public class NewJob extends JFrame implements ActionListener {
 	JComboBox statusDropdown, priorityDropdown; 
 	JRadioButton yesRadioButton, noRadioButton; 
 	
+	
+	
+	
 	private JPanel panel;
 	NewJob() {
 		
@@ -45,7 +48,10 @@ public class NewJob extends JFrame implements ActionListener {
 	heading.setFont(new Font("Candela", Font.BOLD, 18));
 	add(heading); 
 	
-	//name
+	
+	
+	
+			//name
 	 task = new JLabel("Task Name: "); 
 	task.setBounds(30, 50, 100, 30);
 	add(task); 
@@ -55,7 +61,10 @@ public class NewJob extends JFrame implements ActionListener {
 	fieldtask.setSize(200, 40); 
     add(fieldtask); 
     
-    //type
+    
+    
+    
+    			//type
      tasktype = new JLabel("Task Type"); 
     tasktype.setBounds(350, 50, 100, 30); 
     add(tasktype); 
@@ -65,7 +74,9 @@ public class NewJob extends JFrame implements ActionListener {
     add(fieldtype); 
     
     
-    //start date (calendar)
+    
+    
+    			//start date (calendar)
      startDate = new JLabel(" Start Date: "); 
     startDate.setBounds(30, 145, 100, 30);
 	add(startDate);
@@ -76,7 +87,10 @@ public class NewJob extends JFrame implements ActionListener {
     add(fieldStartDate); 
     
 	
-    //due date (calendar)
+    
+    
+    
+    			//due date (calendar)
 	 endDate = new JLabel(" End Date: "); 
 	endDate.setBounds(270, 145, 100, 30);
 	add(endDate);
@@ -87,7 +101,9 @@ public class NewJob extends JFrame implements ActionListener {
     add(endDateField); 
     
     
-    //status (drop down)
+    
+    
+    		//status (drop down)
 	 status = new JLabel(" Status: "); 
 	status.setBounds(30, 220, 100, 30);
 	add(status);
@@ -98,7 +114,10 @@ public class NewJob extends JFrame implements ActionListener {
 	statusDropdown.setSize(180, 40);
 	add(statusDropdown); 
     
-    //priority (drop down)
+	
+	
+	
+    		//priority (drop down)
 	 priority = new JLabel(" Priority: "); 
 	priority.setBounds(270, 220, 100, 30);
 	add(priority);
@@ -109,7 +128,10 @@ public class NewJob extends JFrame implements ActionListener {
 	priorityDropdown.setSize(180, 40);
 	add(priorityDropdown);
     
-    //reminder (radio box)
+	
+	
+	
+    			//reminder (radio box)
 	 reminder = new JLabel(" Reminder ?: "); 
 	reminder.setBounds(30, 300, 100, 30);
 	add(reminder);
@@ -128,7 +150,9 @@ public class NewJob extends JFrame implements ActionListener {
     
     
     
-    //description
+    
+    
+    		//description
 	 description = new JLabel(" Add Description : "); 
 	description.setBounds(30, 360, 100, 30);
 	
@@ -139,12 +163,15 @@ public class NewJob extends JFrame implements ActionListener {
     add(descriptionField);
 	
 	
-	//add task button 
+    
+    
+				//add task button 
      newtaskButton = new JButton("Add Job"); 
     newtaskButton.setBounds(330, 490, 150, 30);
     newtaskButton.addActionListener(this);
     newtaskButton.setSize(150, 50);
     newtaskButton.setBackground(Color.BLUE);
+   
     add(newtaskButton); 
 	
      backButton = new JButton("Back"); 
@@ -168,6 +195,13 @@ public class NewJob extends JFrame implements ActionListener {
 }
 	
 	
+	
+	
+	
+	
+	
+	
+	
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		if (ae.getSource()== newtaskButton) {
@@ -179,18 +213,20 @@ public class NewJob extends JFrame implements ActionListener {
 			String status1 = (String) statusDropdown.getSelectedItem(); 
 			String priority1 = (String) priorityDropdown.getSelectedItem(); 
 			String description1 = description.getText();  
-//			String reminderChoice = "";
-//			if (yesRadioButton.isSelected()) {
-//			    reminderChoice = "Yes";
-//			} else if (noRadioButton.isSelected()) {
-//			    reminderChoice = "No";
-//			}
-			// tasks(name varchar(20), type varchar(20), startdate varchar(30), endDate varchar(30), status varchar(20), priority varchar(20), description varchar(200));  
+			String reminderChoice = "";
+			if (yesRadioButton.isSelected()) {
+			    reminderChoice = "Yes";
+			} else if (noRadioButton.isSelected()) {
+			    reminderChoice = "No";
+			}
+
+			
+			
 			
 			try {
 				Conn conn = new Conn(); 
 				String query = "insert into tasks values('"+task1+"', '"+taskype1+"', '"+startDate1+"', '"+endDate1+"', '"+status1+"', '"+priority1+"', '"+description1+"',   )";
-				conn.s.executeUpdate(query);
+				conn.stm.executeUpdate(query);
 				JOptionPane.showMessageDialog(null, "Details are added Successfully");
 				setVisible(false); 
 				new Home(); 
@@ -199,6 +235,8 @@ public class NewJob extends JFrame implements ActionListener {
 				e.printStackTrace();
 			}
 			
+			
+//			
 			
 		}else {
 			setVisible(false); 
