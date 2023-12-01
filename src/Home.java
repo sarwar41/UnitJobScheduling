@@ -13,7 +13,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import java.awt.Component;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JTextArea;
@@ -92,7 +94,27 @@ public class Home extends JFrame implements ActionListener {
 				else
 					return false;
 			}
+//			@Override
+//            public TableCellRenderer getCellRenderer(int row, int column) {
+//                if (column == 0) {
+//                    return new DefaultTableCellRenderer() {
+//                        @Override
+//                        public Component getTableCellRendererComponent(JTable table, Object value,
+//                                                                       boolean isSelected, boolean hasFocus,
+//                                                                       int row, int column) {
+//                            return new JLabel(""); // Empty JLabel to hide the cell content
+//                        }
+//                    };
+//                }
+//                return super.getCellRenderer(row, column);
+//            }
 		};
+		// Get the TableColumnModel
+        TableColumnModel columnModel = table.getColumnModel();
+        // Hide the "Task id" column
+        TableColumn taskIDColumn = columnModel.getColumn(0);
+        columnModel.removeColumn(taskIDColumn);
+
 		table.getColumnModel().getColumn(2).setPreferredWidth(100);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -219,7 +241,11 @@ public class Home extends JFrame implements ActionListener {
 
 			// Update the table model with the new data
 			tableModel.setDataVector(data.getAllTasks(), columns);
-
+			// Get the TableColumnModel
+	        TableColumnModel columnModel = table.getColumnModel();
+	        // Hide the "Task id" column
+	        TableColumn taskIDColumn = columnModel.getColumn(0);
+	        columnModel.removeColumn(taskIDColumn);
 			// Notify the table that the data has changed
 			tableModel.fireTableDataChanged();
 		} catch (Exception e) {

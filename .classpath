@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="/Users/mddeloarhoshen/Desktop/mysql-connector-j-8.2.0/rs2xml.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="lib" path="/Users/mddeloarhoshen/Desktop/mysql-connector-j-8.2.0/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="/Users/mddeloarhoshen/Desktop/mysql-connector-j-8.2.0/mockito-core-4.8.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
