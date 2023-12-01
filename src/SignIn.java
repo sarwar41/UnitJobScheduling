@@ -4,70 +4,72 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.*;
 
-class SignIn extends JFrame implements ActionListener{
+class SignIn extends JFrame implements ActionListener {
 
 	private JPanel panel;
 	private JLabel labelUsername, labelPassword, labelimg;
 	private JTextField textUsername;
 	private JPasswordField textPassword;
-	private JButton buttonLogin, buttonCancel;
+	private JButton buttonLogin, buttonSignup;
 
 	public SignIn() {
 		this.InitializeComponents();
 	}
 
 	private void InitializeComponents() {
-		this.panel = new JPanel();
-		this.panel.setLayout(null);
-		this.panel.setBackground(Color.white);
+		panel = new JPanel();
+		panel.setLayout(null);
+		panel.setBackground(Color.white);
 
-		this.labelUsername = new JLabel("Email");
-		this.labelUsername.setBounds(220, 80, 80, 20);
-		this.panel.add(this.labelUsername);
+		labelUsername = new JLabel("Email");
+		labelUsername.setBounds(295, 173, 47, 20);
+		panel.add(labelUsername);
 
-		this.textUsername = new JTextField();
-		this.textUsername.setBounds(300, 80, 150, 20);
-		this.panel.add(this.textUsername);
+		textUsername = new JTextField();
+		textUsername.setBounds(354, 173, 150, 20);
+		panel.add(textUsername);
 
-		this.labelPassword = new JLabel("Password");
-		this.labelPassword.setBounds(220, 120, 120, 20);
-		this.panel.add(this.labelPassword);
+		labelPassword = new JLabel("Password");
+		labelPassword.setBounds(277, 225, 65, 20);
+		panel.add(labelPassword);
 
-		this.textPassword = new JPasswordField();
-		this.textPassword.setBounds(300, 120, 150, 20);
-		this.panel.add(this.textPassword);
-		//sign in button
-		this.buttonLogin = new JButton("Sign In");
-		this.buttonLogin.setBounds(350, 160, 120, 30);
-		this.buttonLogin.addActionListener(this);
-		add(this.buttonLogin);
-		//back to sign up button
-		this.buttonCancel = new JButton("Don't have an account?Create a New Account.");
-		this.buttonCancel.setBounds(220, 200, 350, 30);
-		this.buttonCancel.addActionListener(this);
-		add(this.buttonCancel);
+		textPassword = new JPasswordField();
+		textPassword.setBounds(354, 225, 150, 20);
+		panel.add(textPassword);
+
+//		panel.add(buttonSignup);
+//		panel.add(buttonLogin);
+
+		labelimg = new JLabel("");
+		Image img = new ImageIcon(getClass().getResource("/applogin.png")).getImage();
+		labelimg.setIcon(new ImageIcon(img));
+		labelimg.setBounds(60, 136, 150, 150);
+		panel.add(labelimg);
 		
-		this.panel.add(this.buttonCancel);
-		this.panel.add(this.buttonLogin);
+		// back to sign up button
+		buttonSignup = new JButton("Don't have an account? Create a New Account.");
+		buttonSignup.setBounds(207, 322, 322, 30);
+		panel.add(buttonSignup);
+		buttonSignup.addActionListener(this);
 
-		this.add(this.panel);
+		// sign in button
+		buttonLogin = new JButton("Sign In");
+		buttonLogin.setBounds(384, 267, 120, 30);
+		panel.add(buttonLogin);
+		buttonLogin.addActionListener(this);
 
-		this.labelimg = new JLabel("");
-		Image img = new ImageIcon(this.getClass().getResource("/applogin.png")).getImage();
-		this.labelimg.setIcon(new ImageIcon(img));
-		this.labelimg.setBounds(50, 30, 150, 150);
-		this.panel.add(this.labelimg);
-
-		this.setSize(600, 400);
-		this.setLocationRelativeTo(null);
-		this.setTitle("User Signup");
-		this.setLocationRelativeTo(null);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		getContentPane().add(panel);
+		setSize(700, 600);
+		setLocationRelativeTo(null);
+		setTitle("User Signup");
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+
 	public void actionPerformed(ActionEvent ae) {
-		
+
 		if (ae.getSource() == buttonLogin) {
-			
+
 			String username = textUsername.getText();
 			String password = textPassword.getText();
 
@@ -91,13 +93,13 @@ class SignIn extends JFrame implements ActionListener{
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 
-		} 
-		if (ae.getSource() == buttonCancel) {
-			
+		}
+		if (ae.getSource() == buttonSignup) {
+
 			SignUp su = new SignUp();
 			su.setVisible(true);
 			SignIn.this.setVisible(false);
-		} 
+		}
 
 	}
 }

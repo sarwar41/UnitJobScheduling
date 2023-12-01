@@ -13,168 +13,172 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.JTextArea;
 
 
 public class NewJob extends JFrame implements ActionListener {
 
 	JButton newtaskButton, backButton;
 	JLabel heading, task, tasktype, startDate, endDate, status, priority, reminder, description;
-	JTextField fieldtask, fieldtype, descriptionField, fieldStartDate, endDateField;
+	JTextField fieldtask, fieldtype, fieldStartDate, endDateField;
 	JComboBox statusDropdown, priorityDropdown;
 	JRadioButton yesRadioButton, noRadioButton;
 
 	private JPanel panel;
+	private JTextArea descriptionField;
 
 	NewJob() {
 
-		this.panel = new JPanel();
-		this.panel.setLayout(null);
-		this.panel.setBackground(Color.LIGHT_GRAY);
+		panel = new JPanel();
+		panel.setLayout(null);
+		panel.setBackground(Color.LIGHT_GRAY);
 
 		getContentPane().setBackground(Color.WHITE);
-		setLayout(null);
+		getContentPane().setLayout(null);
 
 		heading = new JLabel("Add New Job");
-		heading.setBounds(200, 5, 400, 40);
+		heading.setBounds(270, 16, 173, 40);
 		heading.setFont(new Font("Candela", Font.BOLD, 18));
-		add(heading);
+		getContentPane().add(heading);
 
 		// name
 		task = new JLabel("Task Name: ");
-		task.setBounds(30, 50, 100, 30);
-		add(task);
+		task.setBounds(90, 50, 100, 30);
+		getContentPane().add(task);
 		fieldtask = new JTextField();
-		fieldtask.setBounds(20, 80, 100, 30);
+		fieldtask.setBounds(90, 80, 100, 30);
 		fieldtask.setSize(200, 20);
 		fieldtask.setSize(200, 40);
-		add(fieldtask);
+		getContentPane().add(fieldtask);
 
 		// type
 		tasktype = new JLabel("Task Type");
-		tasktype.setBounds(350, 50, 100, 30);
-		add(tasktype);
+		tasktype.setBounds(466, 50, 100, 30);
+		getContentPane().add(tasktype);
 		fieldtype = new JTextField();
-		fieldtype.setBounds(320, 80, 100, 30);
+		fieldtype.setBounds(466, 80, 100, 30);
 		fieldtype.setSize(200, 40);
-		add(fieldtype);
+		getContentPane().add(fieldtype);
 
 		// start date (calendar)
 		startDate = new JLabel(" Start Date: ");
-		startDate.setBounds(30, 145, 100, 30);
-		add(startDate);
+		startDate.setBounds(90, 132, 100, 30);
+		getContentPane().add(startDate);
 
 		fieldStartDate = new JTextField();
-		fieldStartDate.setBounds(20, 170, 100, 30);
+		fieldStartDate.setBounds(90, 170, 100, 30);
 		fieldStartDate.setSize(200, 20);
-		add(fieldStartDate);
+		getContentPane().add(fieldStartDate);
 
 		// due date (calendar)
 		endDate = new JLabel(" End Date: ");
-		endDate.setBounds(270, 145, 100, 30);
-		add(endDate);
+		endDate.setBounds(466, 132, 100, 30);
+		getContentPane().add(endDate);
 
 		endDateField = new JTextField();
-		endDateField.setBounds(270, 170, 100, 30);
+		endDateField.setBounds(466, 170, 100, 30);
 		endDateField.setSize(200, 20);
-		add(endDateField);
+		getContentPane().add(endDateField);
 
 		// status (drop down)
 		status = new JLabel(" Status: ");
-		status.setBounds(30, 220, 100, 30);
-		add(status);
+		status.setBounds(90, 220, 100, 30);
+		getContentPane().add(status);
 
 		String statusList[] = { "Choose Status", "To-Do", "In Progress", "Finished" };
 		statusDropdown = new JComboBox(statusList);
-		statusDropdown.setBounds(20, 250, 100, 30);
+		statusDropdown.setBounds(90, 250, 100, 30);
 		statusDropdown.setSize(180, 40);
-		add(statusDropdown);
+		getContentPane().add(statusDropdown);
 
 		// priority (drop down)
 		priority = new JLabel(" Priority: ");
-		priority.setBounds(270, 220, 100, 30);
-		add(priority);
+		priority.setBounds(466, 220, 100, 30);
+		getContentPane().add(priority);
 
 		String priorityList[] = { "Choose Priority", "Low", "Medium", "High", "Critical" };
 		priorityDropdown = new JComboBox(priorityList);
-		priorityDropdown.setBounds(260, 250, 100, 30);
+		priorityDropdown.setBounds(466, 250, 100, 30);
 		priorityDropdown.setSize(180, 40);
-		add(priorityDropdown);
+		getContentPane().add(priorityDropdown);
 
 		// reminder (radio box)
-		reminder = new JLabel(" Reminder ?: ");
-		reminder.setBounds(30, 300, 100, 30);
-		add(reminder);
-
-		yesRadioButton = new JRadioButton("Yes");
-		yesRadioButton.setBounds(140, 300, 60, 30);
-		add(yesRadioButton);
-
-		noRadioButton = new JRadioButton("No");
-		noRadioButton.setBounds(200, 300, 60, 30);
-		add(noRadioButton);
+//		reminder = new JLabel(" Reminder ?: ");
+//		reminder.setBounds(90, 302, 100, 30);
+//		getContentPane().add(reminder);
+//
+//		yesRadioButton = new JRadioButton("Yes");
+//		yesRadioButton.setBounds(179, 302, 60, 30);
+//		getContentPane().add(yesRadioButton);
+//
+//		noRadioButton = new JRadioButton("No");
+//		noRadioButton.setBounds(237, 302, 60, 30);
+//		getContentPane().add(noRadioButton);
 
 		ButtonGroup group = new ButtonGroup();
 		group.add(yesRadioButton);
 		group.add(noRadioButton);
 
 		// description
-		description = new JLabel(" Add Description : ");
-		description.setBounds(30, 360, 100, 30);
+		description = new JLabel(" Description : ");
+		description.setBounds(90, 307, 100, 30);
 
-		add(description);
-		descriptionField = new JTextField();
-		descriptionField.setBounds(20, 380, 100, 30);
+		getContentPane().add(description);
+		descriptionField = new JTextArea();
+		descriptionField.setBounds(90, 349, 400, 59);
 		descriptionField.setSize(400, 70);
-		add(descriptionField);
+		getContentPane().add(descriptionField);
 
 		// add task button
 		newtaskButton = new JButton("Add Job");
-		newtaskButton.setBounds(330, 490, 150, 30);
+		newtaskButton.setBounds(431, 478, 150, 30);
 		newtaskButton.addActionListener(this);
 		newtaskButton.setSize(150, 50);
 		newtaskButton.setBackground(Color.BLUE);
 
-		add(newtaskButton);
+		getContentPane().add(newtaskButton);
 
 		backButton = new JButton("Back");
-		backButton.setBounds(90, 490, 150, 30);
+		backButton.setBounds(127, 478, 150, 30);
 		backButton.addActionListener(this);
 		backButton.setSize(150, 50);
 		backButton.setBackground(Color.BLUE);
 		setVisible(true);
-		add(backButton);
+		getContentPane().add(backButton);
 
-		this.add(this.panel);
+		getContentPane().add(panel);
+		
+		
 
-		this.setSize(600, 580);
-		this.setLocationRelativeTo(null);
-		this.setTitle("Add New Job");
-		this.setLocationRelativeTo(null);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(700, 600);
+		setLocationRelativeTo(null);
+		setTitle("Add New Job");
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		if (ae.getSource() == newtaskButton) {
 
-			String task1 = fieldtask.getText();
-			String taskype1 = fieldtype.getText();
-			String startDate1 = fieldStartDate.getText();
-			String endDate1 = endDateField.getText();
-			String status1 = (String) statusDropdown.getSelectedItem();
-			String priority1 = (String) priorityDropdown.getSelectedItem();
-			String description1 = description.getText();
-			String reminderChoice = "";
-			if (yesRadioButton.isSelected()) {
-				reminderChoice = "Yes";
-			} else if (noRadioButton.isSelected()) {
-				reminderChoice = "No";
-			}
+			String task_name = fieldtask.getText();
+			String task_type = fieldtype.getText();
+			String start_date = fieldStartDate.getText();
+			String end_date = endDateField.getText();
+			String status = (String) statusDropdown.getSelectedItem();
+			String priority = (String) priorityDropdown.getSelectedItem();
+			String description = descriptionField.getText();
+//			String reminderChoice = "";
+//			if (yesRadioButton.isSelected()) {
+//				reminderChoice = "Yes";
+//			} else if (noRadioButton.isSelected()) {
+//				reminderChoice = "No";
+//			}
 
 			try {
 				Conn conn = new Conn();
-				String query = "insert into tasks values('" + task1 + "', '" + taskype1 + "', '" + startDate1 + "', '"
-						+ endDate1 + "', '" + status1 + "', '" + priority1 + "', '" + description1 + "')";
+				String query = "insert into tasks values('" + task_name + "', '" + task_type + "', '" + start_date + "', '"
+						+ end_date + "', '" + status + "', '" + priority + "', '" + description + "')";
 				conn.stm.executeUpdate(query);
 				JOptionPane.showMessageDialog(null, "Details are added Successfully");
 				setVisible(false);

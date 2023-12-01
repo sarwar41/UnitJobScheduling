@@ -5,9 +5,9 @@ import java.security.MessageDigest;
 
 class Conn {
 
-	private static final String DB_URL = "jdbc:mysql://localhost:3306/jobScheduler";
+	private static final String DB_URL = "jdbc:mysql://localhost:3306/unitjobscheduling";
 	private static final String DB_USER = "root";
-	private static final String DB_PASSWORD = "Daksh2000";
+	private static final String DB_PASSWORD = "Asd%049724";
 
 	public Connection con;
 	public Statement stm;

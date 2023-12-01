@@ -30,34 +30,35 @@ public class ViewJob extends JFrame implements ActionListener {
 
 	ViewJob() {
 
-		this.panel = new JPanel();
-		this.panel.setLayout(null);
-		this.panel.setBackground(Color.LIGHT_GRAY);
+		panel = new JPanel();
+		panel.setLayout(null);
+		panel.setBackground(Color.LIGHT_GRAY);
 
 		getContentPane().setBackground(Color.WHITE);
-		setLayout(null);
+		getContentPane().setLayout(null);
 
 		JLabel heading = new JLabel("Your Jobs");
 		heading.setBounds(280, 5, 400, 40);
 		heading.setFont(new Font("Candela", Font.BOLD, 18));
-		add(heading);
+		getContentPane().add(heading);
 
 		// table
 
 		getContentPane().setBackground(Color.WHITE);
-		setLayout(null);
+		getContentPane().setLayout(null);
 
 		JLabel search = new JLabel("Search by the Name:");
 		search.setBounds(20, 60, 150, 20);
-		add(search);
+		getContentPane().add(search);
 
 		jobName = new Choice();
 		jobName.setBounds(160, 60, 150, 20);
-		add(jobName);
+		getContentPane().add(jobName);
 
 		table = new JTable();
 
 		try {
+			DataAccess db = new DataAccess();
 			Conn con = new Conn();
 			ResultSet rs = con.stm.executeQuery("select * from tasks");
 			while (rs.next()) {
@@ -78,34 +79,34 @@ public class ViewJob extends JFrame implements ActionListener {
 		}
 
 		JScrollPane jsp = new JScrollPane(table);
-		jsp.setBounds(0, 150, 900, 600);
-		add(jsp);
+		jsp.setBounds(20, 147, 660, 302);
+		getContentPane().add(jsp);
 
 		search1 = new JButton("Search");
 		search1.setBounds(20, 100, 150, 20);
 		search1.setSize(100, 35);
 		search1.addActionListener(this);
-		add(search1);
+		getContentPane().add(search1);
 
 		update = new JButton("Update");
 		update.setBounds(130, 100, 150, 20);
 		update.setSize(100, 35);
 		update.addActionListener(this);
-		add(update);
+		getContentPane().add(update);
 
 		back = new JButton("Back");
 		back.setBounds(240, 100, 150, 20);
 		back.setSize(100, 35);
 		back.addActionListener(this);
-		add(back);
+		getContentPane().add(back);
 
-		this.add(this.panel);
+		getContentPane().add(panel);
 
-		this.setSize(700, 500);
-		this.setLocationRelativeTo(null);
-		this.setTitle("Add New Job");
-		this.setLocationRelativeTo(null);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(700, 600);
+		setLocationRelativeTo(null);
+		setTitle("Add New Job");
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}
 

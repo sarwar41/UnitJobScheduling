@@ -17,59 +17,60 @@ class SignUp extends JFrame implements ActionListener {
 	}
 
 	private void InitializeComponents() {
+
+		panel = new JPanel();
+		panel.setLayout(null);
+		panel.setBackground(Color.white);
+
+		labelUsername = new JLabel("Email");
+		labelUsername.setBounds(295, 173, 47, 20);
+		panel.add(labelUsername);
+
+		textUsername = new JTextField();
+		textUsername.setBounds(354, 173, 150, 20);
+		panel.add(textUsername);
+
+		labelPassword = new JLabel("Password");
+		labelPassword.setBounds(277, 225, 65, 20);
+		panel.add(labelPassword);
+
+		textPassword = new JPasswordField();
+		textPassword.setBounds(354, 225, 150, 20);
+		panel.add(textPassword);
+
+//		panel.add(buttonCancel);
+//		panel.add(buttonSignup);
+		getContentPane().add(panel);
 		
-		this.panel = new JPanel();
-		this.panel.setLayout(null);
-		this.panel.setBackground(Color.white);
-
-		this.labelUsername = new JLabel("Email");
-		this.labelUsername.setBounds(220, 80, 80, 20);
-		this.panel.add(this.labelUsername);
-
-		this.textUsername = new JTextField();
-		this.textUsername.setBounds(300, 80, 150, 20);
-		this.panel.add(this.textUsername);
-
-		this.labelPassword = new JLabel("Password");
-		this.labelPassword.setBounds(220, 120, 120, 20);
-		this.panel.add(this.labelPassword);
-
-		this.textPassword = new JPasswordField();
-		this.textPassword.setBounds(300, 120, 150, 20);
-		this.panel.add(this.textPassword);
-
-		//sign up button
-		this.buttonSignup = new JButton("Sign Up");
-		this.buttonSignup.setBounds(350, 160, 120, 30);
-		this.buttonSignup.addActionListener(this);
-		add(this.buttonSignup);
-
-		//back to sign in button
-		this.buttonCancel = new JButton("Already Have an account? SignIn");
-		this.buttonCancel.setBounds(220, 200, 250, 30);
-		this.buttonCancel.addActionListener(this);
-		add(this.buttonCancel);
-
-		this.panel.add(this.buttonCancel);
-		this.panel.add(this.buttonSignup);
-		this.add(this.panel);
-
-		this.labelimg = new JLabel("");
-		Image img = new ImageIcon(this.getClass().getResource("/applogin.png")).getImage();
-		this.labelimg.setIcon(new ImageIcon(img));
-		this.labelimg.setBounds(50, 30, 150, 150);
-		this.panel.add(this.labelimg);
-
-		this.setSize(600, 400);
-		this.setLocationRelativeTo(null);
-		this.setTitle("User Signup");
-		this.setLocationRelativeTo(null);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		labelimg = new JLabel("");
+		Image img = new ImageIcon(getClass().getResource("/applogin.png")).getImage();
+		labelimg.setIcon(new ImageIcon(img));
+		labelimg.setBounds(60, 136, 150, 150);
+		panel.add(labelimg);
+		//back to sign up button
+		buttonCancel = new JButton("Already Have an account? SignIn");
+		buttonCancel.setBounds(207, 322, 322, 30);
+		panel.add(buttonCancel);
+		buttonCancel.addActionListener(this);
+		
+		//sign in button
+		buttonSignup = new JButton("Sign Up");
+		buttonSignup.setBounds(384, 267, 120, 30);
+		panel.add(buttonSignup);
+		buttonSignup.addActionListener(this);
+		
+		
+		setSize(700, 600);
+		setLocationRelativeTo(null);
+		setTitle("User Signup");
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+
 	public void actionPerformed(ActionEvent ae) {
 
 		if (ae.getSource() == buttonSignup) {
-			
+
 			String username = textUsername.getText();
 			String password = textPassword.getText();
 
@@ -84,13 +85,13 @@ class SignUp extends JFrame implements ActionListener {
 			DataAccess api = new DataAccess();
 			String resp = api.signUp(username, password);
 			JOptionPane.showMessageDialog(null, resp, "Message", JOptionPane.INFORMATION_MESSAGE);
-		} 
+		}
 		if (ae.getSource() == buttonCancel) {
-			
+
 			SignIn si = new SignIn();
 			si.setVisible(true);
 			SignUp.this.setVisible(false);
-		} 
+		}
 
 	}
 }

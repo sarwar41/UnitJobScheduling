@@ -7,8 +7,8 @@ public class Main {
 			Home hm = new Home();
 			hm.setVisible(true);
 		} else {
-			SignUp su = new SignUp();
-			su.setVisible(true);
+			SignIn si = new SignIn();
+			si.setVisible(true);
 		}
 
 	}

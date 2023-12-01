@@ -9,10 +9,9 @@ class DataAccess {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/unitjobscheduling";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "Asd%049724";
-
     private Connection con;
     private Statement stm;
-
+    
     public DataAccess() {
     	
         this.initializeDatabaseConnection();
@@ -42,6 +41,19 @@ class DataAccess {
             return null;
         }
     }
+    // executeQuery update
+    int executeQueryUpdate(String sql) {
+        try {
+            int rowsAffected = this.stm.executeUpdate(sql);
+
+            return rowsAffected;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return -1;
+        }
+    }
+
     //check user is valid or not
     public boolean isUserValid(String username, String password) {
         String sql = "SELECT * FROM users WHERE user_name=? AND user_password=?";
@@ -150,29 +162,9 @@ class DataAccess {
     }
     //get all lists of tasks
     public Vector<Vector<String>> getAllTasks() {
-        String sql = "SELECT roomnumber,roomtype,bedtype,price FROM tasks";
-        String[] columnNames = {"roomnumber", "roomtype", "bedtype", "price"};
+        String sql = "SELECT task_id, name,type,description,startdate,endDate,status,priority FROM tasks";
+        String[] columnNames = {"task_id","name","type", "description", "status","startdate", "endDate", "priority"};
         return fetchInfo(sql, columnNames);
     }
-    //get all lists of tasks
-    public Vector<Vector<String>> getAllMemberInfo() {
-        String sql = "SELECT firstname,lastname,gender,age,address,idtype,idnumber,username," +
-                "checkin,checkout,totalammount,paid,due,days FROM memberaccount";
-        String[] columnNames = {"firstname", "lastname", "gender", "age", "address", "idtype", "idnumber",
-                "username", "checkin", "checkout", "totalammount", "paid", "due", "days"};
-        return fetchInfo(sql, columnNames);
-    }
-
-    public Vector<Vector<String>> getStatusInfo() {
-        String sql = "SELECT username,roomnumber,days,checkin,checkout,paid,due FROM memberaccount";
-        String[] columnNames = {"username", "roomnumber", "days", "checkin", "checkout", "paid", "due"};
-        return fetchInfo(sql, columnNames);
-    }
-
-    public Vector<Vector<String>> getAllServices() {
-        String sql = "SELECT service.name,service.room,service.services,service.price,memberaccount.due " +
-                "FROM service,memberaccount WHERE service.name = memberaccount.username AND service.room = memberaccount.roomnumber";
-        String[] columnNames = {"name", "room", "services", "price"};
-        return fetchInfo(sql, columnNames);
-    }
+    
 }

@@ -2,75 +2,330 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
+import java.awt.Component;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
+import javax.swing.JTextArea;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class Home extends JFrame implements ActionListener {
 
 	JButton addJob, viewJob, updateJob, deleteJob;
-
 	private JPanel panel;
+	private JTable table;
+	private DefaultTableModel tableModel;
+	private JScrollPane scrollPane;
+	private JLabel taskNameLabel, taskTypeLabel, taskDescLabel, taskStartLabel, taskEndLabel, status, priority;
+	private JTextField taskNameField, taskTypeField, taskStartField, taskEndField;
+	private JComboBox statusDropdown, priorityDropdown;
+	private JTextArea taskDescField;
+	private JButton backButton;
+	private int sel_task_id;
 
 	Home() {
 
-		this.panel = new JPanel();
-		this.panel.setLayout(null);
-		this.panel.setBackground(Color.white);
+		panel = new JPanel();
+		panel.setLayout(null);
+		panel.setBackground(Color.white);
 
 		getContentPane().setBackground(Color.WHITE);
-		setLayout(null);
+		getContentPane().setLayout(null);
 
-		JLabel heading = new JLabel("Jobs Scheduler");
-		heading.setBounds(300, 20, 400, 40);
+		JLabel heading = new JLabel("Job Scheduler");
+		heading.setBounds(255, 0, 201, 40);
 		heading.setFont(new Font("Candela", Font.BOLD, 25));
-		add(heading);
+		getContentPane().add(heading);
 
-		addJob = new JButton("Add New Job");
-		addJob.setBounds(50, 80, 150, 40);
+		addJob = new JButton("Add Job");
+		addJob.setBounds(537, 538, 124, 40);
 		addJob.addActionListener(this);
-		add(addJob);
+		getContentPane().add(addJob);
 
 		viewJob = new JButton("View my Jobs");
-		viewJob.setBounds(50, 140, 150, 40);
+		viewJob.setBounds(537, 617, 124, 40);
 		viewJob.addActionListener(this);
-		add(viewJob);
+		getContentPane().add(viewJob);
 
-		updateJob = new JButton("Edit Jobs");
-		updateJob.setBounds(50, 200, 150, 40);
+		updateJob = new JButton("Update Job");
+		updateJob.setBounds(673, 538, 124, 40);
 		updateJob.addActionListener(this);
-		add(updateJob);
+		getContentPane().add(updateJob);
 
-		deleteJob = new JButton("Delete Jobs");
-		deleteJob.setBounds(50, 260, 150, 40);
+		deleteJob = new JButton("Delete Job");
+		deleteJob.setBounds(809, 538, 124, 40);
 		deleteJob.addActionListener(this);
-		add(deleteJob);
+		getContentPane().add(deleteJob);
 
-		this.add(this.panel);
+		getContentPane().add(panel);
 
-		this.setSize(800, 600);
-		this.setLocationRelativeTo(null);
-		this.setTitle("Job Scheduler");
-		this.setLocationRelativeTo(null);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		table = new JTable();
+//		table.setBounds(16, 61, 1, 1);
+//		table.setSize(getPreferredSize());
+		//
+		Vector<String> columns = new Vector<String>();
+		columns.add("Task id");
+		columns.add("Name");
+		columns.add("Type");
+		columns.add("Description");
+		columns.add("Status");
+		columns.add("Start Date");
+		columns.add("End Date");
+		columns.add("Priority");
+		DataAccess data = new DataAccess();
+		tableModel = new DefaultTableModel(data.getAllTasks(), columns);
+		table = new JTable(tableModel) {
+			public boolean isCellEditable(int row, int column) {
+				if (column == 0)
+					return true;
+				else
+					return false;
+			}
+		};
+		table.getColumnModel().getColumn(2).setPreferredWidth(100);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		scrollPane = new JScrollPane(table);
+		scrollPane.setBounds(17, 112, 489, 633);
+//		panel.add(scrollPane);
+//		
+//		JScrollPane scrollPane_1 = new JScrollPane((Component) null);
+//		scrollPane_1.setBounds(17, 60, 541, 472);
+		getContentPane().add(scrollPane);
+
+		taskNameLabel = new JLabel("Task Name: ");
+		taskNameLabel.setBounds(530, 112, 100, 30);
+		getContentPane().add(taskNameLabel);
+
+		taskNameField = new JTextField();
+		taskNameField.setBounds(530, 142, 200, 40);
+		getContentPane().add(taskNameField);
+
+		taskTypeLabel = new JLabel("Task Type");
+		taskTypeLabel.setBounds(764, 112, 100, 30);
+		getContentPane().add(taskTypeLabel);
+
+		taskTypeField = new JTextField();
+		taskTypeField.setBounds(764, 142, 200, 40);
+		getContentPane().add(taskTypeField);
+
+		taskStartLabel = new JLabel(" Start Date: ");
+		taskStartLabel.setBounds(530, 194, 100, 30);
+		getContentPane().add(taskStartLabel);
+
+		taskStartField = new JTextField();
+		taskStartField.setBounds(530, 232, 200, 20);
+		getContentPane().add(taskStartField);
+
+		taskEndLabel = new JLabel(" End Date: ");
+		taskEndLabel.setBounds(764, 194, 100, 30);
+		getContentPane().add(taskEndLabel);
+
+		taskEndField = new JTextField();
+		taskEndField.setBounds(764, 232, 200, 20);
+		getContentPane().add(taskEndField);
+
+		status = new JLabel(" Status: ");
+		status.setBounds(537, 264, 100, 30);
+		getContentPane().add(status);
+
+		String statusList[] = { "Choose Status", "To-Do", "In Progress", "Finished" };
+		statusDropdown = new JComboBox(statusList);
+		statusDropdown.setBounds(537, 294, 180, 40);
+		getContentPane().add(statusDropdown);
+
+		priority = new JLabel(" Priority: ");
+		priority.setBounds(764, 264, 100, 30);
+		getContentPane().add(priority);
+
+		String priorityList[] = { "Choose Priority", "Low", "Medium", "High", "Critical" };
+		priorityDropdown = new JComboBox(priorityList);
+		priorityDropdown.setBounds(764, 294, 180, 40);
+		getContentPane().add(priorityDropdown);
+
+		taskDescLabel = new JLabel(" Description : ");
+		taskDescLabel.setBounds(537, 351, 100, 30);
+		getContentPane().add(taskDescLabel);
+
+		taskDescField = new JTextArea();
+		taskDescField.setBounds(537, 393, 400, 70);
+		getContentPane().add(taskDescField);
+
+		backButton = new JButton("Profile");
+		backButton.setBackground(Color.BLUE);
+		backButton.setBounds(850, 11, 124, 40);
+		getContentPane().add(backButton);
+		//
+		setSize(1000, 800);
+		setLocationRelativeTo(null);
+		setTitle("Job Scheduler");
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		//
+		// Add ListSelectionListener to the table
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				int selectedRow = table.getSelectedRow();
+
+				if (selectedRow >= 0) {
+					// Get data from the selected row
+					String taskName = (String) tableModel.getValueAt(selectedRow, 1);
+					String taskType = (String) tableModel.getValueAt(selectedRow, 2);
+					String startDate = (String) tableModel.getValueAt(selectedRow, 5);
+					String endDate = (String) tableModel.getValueAt(selectedRow, 6);
+					String status = (String) tableModel.getValueAt(selectedRow, 4);
+					String priority = (String) tableModel.getValueAt(selectedRow, 7);
+					String description = (String) tableModel.getValueAt(selectedRow, 3);
+					sel_task_id = Integer.parseInt((String) tableModel.getValueAt(selectedRow, 0));
+					// Set values in your GUI components
+					taskNameField.setText(taskName);
+					taskTypeField.setText(taskType);
+					taskStartField.setText(startDate);
+					taskEndField.setText(endDate);
+					statusDropdown.setSelectedItem(status);
+					priorityDropdown.setSelectedItem(priority);
+					taskDescField.setText(description);
+				}
+			}
+		});
 	}
 
+	//
+	private void refreshTable() {
+		try {
+			DataAccess data = new DataAccess();
+			Vector<String> columns = new Vector<String>();
+			columns.add("Task id");
+			columns.add("Name");
+			columns.add("Type");
+			columns.add("Description");
+			columns.add("Status");
+			columns.add("Start Date");
+			columns.add("End Date");
+			columns.add("Priority");
+
+			// Update the table model with the new data
+			tableModel.setDataVector(data.getAllTasks(), columns);
+
+			// Notify the table that the data has changed
+			tableModel.fireTableDataChanged();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	//
 	public void actionPerformed(ActionEvent ae) {
 
 		if (ae.getSource() == addJob) {
-			System.out.println("addjobs pressed");
-			NewJob nj = new NewJob();
-			nj.setVisible(true);
-			Home.this.setVisible(false);
+
+			String name = taskNameField.getText();
+			String type = taskTypeField.getText();
+			String startdate = taskStartField.getText();
+			String enddate = taskEndField.getText();
+			String status = (String) statusDropdown.getSelectedItem();
+			String priority = (String) priorityDropdown.getSelectedItem();
+			String description = taskDescField.getText();
+//			String reminderChoice = "";
+//			if (yesRadioButton.isSelected()) {
+//				reminderChoice = "Yes";
+//			} else if (noRadioButton.isSelected()) {
+//				reminderChoice = "No";
+//			}
+
+			try {
+				DataAccess db = new DataAccess();
+				String insertQuery = "INSERT INTO tasks (name, type, startdate, enddate, status, priority, description) "
+						+ "VALUES ('" + name + "', '" + type + "', '" + startdate + "', '" + enddate + "', '" + status
+						+ "', '" + priority + "', '" + description + "')";
+
+				int resp = db.executeQueryUpdate(insertQuery);
+				if (resp > 0) {
+					JOptionPane.showMessageDialog(null, "Details are added Successfully");
+					refreshTable();
+				} else {
+					JOptionPane.showMessageDialog(null, "Details are not added");
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} else if (ae.getSource() == viewJob) {
 			ViewJob vj = new ViewJob();
 			vj.setVisible(true);
 			Home.this.setVisible(false);
 		} else if (ae.getSource() == updateJob) {
+			String name = taskNameField.getText();
+			String type = taskTypeField.getText();
+			String startdate = taskStartField.getText();
+			String enddate = taskEndField.getText();
+			String status = (String) statusDropdown.getSelectedItem();
+			String priority = (String) priorityDropdown.getSelectedItem();
+			String description = taskDescField.getText();
+//			String reminderChoice = "";
+//			if (yesRadioButton.isSelected()) {
+//				reminderChoice = "Yes";
+//			} else if (noRadioButton.isSelected()) {
+//				reminderChoice = "No";
+//			}
 
+			try {
+				if (sel_task_id > 0) {
+					DataAccess db = new DataAccess();
+					String updateQuery = "UPDATE tasks SET " + "name='" + name + "', " + "type='" + type + "', "
+							+ "startdate='" + startdate + "', " + "enddate='" + enddate + "', " + "status='" + status
+							+ "', " + "priority='" + priority + "', " + "description='" + description + "' "
+							+ "WHERE task_id=" + sel_task_id;
+
+					int resp = db.executeQueryUpdate(updateQuery);
+					if (resp > 0) {
+						JOptionPane.showMessageDialog(null, "Details are updated Successfully");
+						refreshTable();
+					} else {
+						JOptionPane.showMessageDialog(null, "Details are not updated");
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Please select a task first to update");
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} else if (ae.getSource() == deleteJob) {
+			
+			
+			if (sel_task_id > 0) {
+				
+				int confirmResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this selected Task ?", "Confirmation", JOptionPane.YES_NO_OPTION);
+	            if (confirmResult == JOptionPane.YES_OPTION) {
+	            	DataAccess db = new DataAccess();
+					String deleteQuery = "DELETE FROM tasks WHERE task_id = " + sel_task_id;
+
+					int resp = db.executeQueryUpdate(deleteQuery);
+					if (resp > 0) {
+						JOptionPane.showMessageDialog(null, "Task has deleted Successfully");
+						refreshTable();
+					} else {
+						JOptionPane.showMessageDialog(null, "Task has not deleted.");
+					}
+	            }
+				
+			} else {
+				JOptionPane.showMessageDialog(null, "Please select a task first to delete");
+			}
 
 		} else {
 
