@@ -82,9 +82,9 @@ class SignIn extends JFrame implements ActionListener {
 				return;
 			}
 			DataAccess api = new DataAccess();
-			boolean resp = api.isUserValid(username, password);
-			if (resp) {
-				utils.saveUserloggedInData("yes");
+			String resp = api.isUserValid(username, password);
+			if (!resp.isEmpty()) {
+				utils.saveUserloggedInData(resp);
 				Home hm = new Home();
 				hm.setVisible(true);
 				SignIn.this.setVisible(false);

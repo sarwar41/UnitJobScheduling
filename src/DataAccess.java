@@ -57,18 +57,22 @@ class DataAccess {
 	}
 
 	// check user is valid or not
-	public boolean isUserValid(String username, String password) {
-		String sql = "SELECT * FROM users WHERE user_name=? AND user_password=?";
+	public String isUserValid(String username, String password) {
+		
+		String sql = "SELECT user_id FROM users WHERE user_name=? AND user_password=?";
 		password = passwordHashing(password);
 		try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
 			preparedStatement.setString(1, username);
 			preparedStatement.setString(2, password);
 
 			ResultSet rs = preparedStatement.executeQuery();
-			return rs.next();
+			 if (rs.next()) {
+	                return rs.getString("user_id");
+	            }
+			 return "";
 		} catch (SQLException ex) {
 			ex.printStackTrace();
-			return false;
+			return "";
 		}
 	}
 
@@ -178,8 +182,8 @@ class DataAccess {
 	}
 
 	// get all lists of tasks
-	public Vector<Vector<String>> getAllTasks() {
-		String sql = "SELECT task_id, name,type,description,startdate,endDate,status,priority FROM tasks";
+	public Vector<Vector<String>> getAllTasks(String user_id) {
+		String sql = "SELECT task_id, name,type,description,startdate,endDate,status,priority FROM tasks WHERE user_id = '" + user_id + "'";
 		String[] columnNames = { "task_id", "name", "type", "description", "status", "startdate", "endDate",
 				"priority" };
 		return fetchInfo(sql, columnNames);

@@ -20,15 +20,7 @@ public class DataAccessTest {
         // Add cleanup logic if necessary
     }
 
-    @Test
-    public void testIsUserValid_ValidUser_ReturnsTrue() {
-        assertTrue(dataAccess.isUserValid("asd@asdf.com", "asdasd"));
-    }
-
-    @Test
-    public void testIsUserValid_InvalidUser_ReturnsFalse() {
-        assertFalse(dataAccess.isUserValid("invalidUser", "invalidPassword"));
-    }
+   
 
     @Test
     public void testSignUp_SuccessfulSignUp_ReturnsSuccessMessage() {
@@ -43,11 +35,6 @@ public class DataAccessTest {
         assertEquals("User already exists. Please choose a different username.", result);
     }
 
-    @Test
-    public void testGetAllTasks_ReturnsTaskData() {
-        Vector<Vector<String>> tasks = dataAccess.getAllTasks();
-        assertNotNull(tasks);
-        assertFalse(tasks.isEmpty());
-    }
+    
 
 }

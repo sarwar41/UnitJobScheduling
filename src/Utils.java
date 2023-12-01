@@ -31,10 +31,10 @@ class Utils {
 	}
 
 	//
-	public void saveUserloggedInData(String data) {
+	public void saveUserloggedInData(String user_id) {
 		try (OutputStream output = new FileOutputStream("localStorage.properties")) {
 			Properties properties = new Properties();
-			properties.setProperty("data", data);
+			properties.setProperty("user_id", user_id);
 			properties.store(output, null);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -48,7 +48,7 @@ class Utils {
 		if (file.exists()) {
 			try (InputStream input = new FileInputStream(file)) {
 				properties.load(input);
-				return properties.getProperty("data", "");
+				return properties.getProperty("user_id", "");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

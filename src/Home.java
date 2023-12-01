@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -12,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -35,9 +37,12 @@ public class Home extends JFrame implements ActionListener {
 	private JTextArea taskDescField;
 	private JButton backButton;
 	private int sel_task_id;
+	private String user_id;
 
 	Home() {
-
+		Utils utils = new Utils();
+		String resp = utils.loadUserloggedInData();
+		user_id = resp;
 		panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(Color.white);
@@ -86,7 +91,7 @@ public class Home extends JFrame implements ActionListener {
 		columns.add("End Date");
 		columns.add("Priority");
 		DataAccess data = new DataAccess();
-		tableModel = new DefaultTableModel(data.getAllTasks(), columns);
+		tableModel = new DefaultTableModel(data.getAllTasks(user_id), columns);
 		table = new JTable(tableModel) {
 			public boolean isCellEditable(int row, int column) {
 				if (column == 0)
@@ -181,6 +186,10 @@ public class Home extends JFrame implements ActionListener {
 		getContentPane().add(taskDescLabel);
 
 		taskDescField = new JTextArea();
+		taskDescField.setBackground(new Color(255, 255, 255));
+		Border border = BorderFactory.createLineBorder(Color.BLACK);
+		taskDescField.setBorder(BorderFactory.createCompoundBorder(border, 
+		      BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 		taskDescField.setBounds(537, 393, 400, 70);
 		getContentPane().add(taskDescField);
 
@@ -240,7 +249,7 @@ public class Home extends JFrame implements ActionListener {
 			columns.add("Priority");
 
 			// Update the table model with the new data
-			tableModel.setDataVector(data.getAllTasks(), columns);
+			tableModel.setDataVector(data.getAllTasks(user_id), columns);
 			// Get the TableColumnModel
 	        TableColumnModel columnModel = table.getColumnModel();
 	        // Hide the "Task id" column
