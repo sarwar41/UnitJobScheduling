@@ -26,7 +26,7 @@ import javax.swing.event.ListSelectionListener;
 
 public class Home extends JFrame implements ActionListener {
 
-	JButton addJob, viewJob, updateJob, deleteJob;
+	JButton addJob, viewJob, updateJob, deleteJob, profileBtn;
 	private JPanel panel;
 	private JTable table;
 	private DefaultTableModel tableModel;
@@ -35,7 +35,6 @@ public class Home extends JFrame implements ActionListener {
 	private JTextField taskNameField, taskTypeField, taskStartField, taskEndField;
 	private JComboBox statusDropdown, priorityDropdown;
 	private JTextArea taskDescField;
-	private JButton backButton;
 	private int sel_task_id;
 	private String user_id;
 
@@ -115,10 +114,10 @@ public class Home extends JFrame implements ActionListener {
 //            }
 		};
 		// Get the TableColumnModel
-        TableColumnModel columnModel = table.getColumnModel();
-        // Hide the "Task id" column
-        TableColumn taskIDColumn = columnModel.getColumn(0);
-        columnModel.removeColumn(taskIDColumn);
+		TableColumnModel columnModel = table.getColumnModel();
+		// Hide the "Task id" column
+		TableColumn taskIDColumn = columnModel.getColumn(0);
+		columnModel.removeColumn(taskIDColumn);
 
 		table.getColumnModel().getColumn(2).setPreferredWidth(100);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -136,7 +135,7 @@ public class Home extends JFrame implements ActionListener {
 		getContentPane().add(taskNameLabel);
 
 		taskNameField = new JTextField();
-		taskNameField.setBounds(530, 142, 200, 40);
+		taskNameField.setBounds(530, 142, 200, 30);
 		getContentPane().add(taskNameField);
 
 		taskTypeLabel = new JLabel("Task Type");
@@ -144,7 +143,7 @@ public class Home extends JFrame implements ActionListener {
 		getContentPane().add(taskTypeLabel);
 
 		taskTypeField = new JTextField();
-		taskTypeField.setBounds(764, 142, 200, 40);
+		taskTypeField.setBounds(764, 142, 200, 30);
 		getContentPane().add(taskTypeField);
 
 		taskStartLabel = new JLabel(" Start Date: ");
@@ -152,7 +151,7 @@ public class Home extends JFrame implements ActionListener {
 		getContentPane().add(taskStartLabel);
 
 		taskStartField = new JTextField();
-		taskStartField.setBounds(530, 232, 200, 20);
+		taskStartField.setBounds(530, 232, 200, 30);
 		getContentPane().add(taskStartField);
 
 		taskEndLabel = new JLabel(" End Date: ");
@@ -160,7 +159,7 @@ public class Home extends JFrame implements ActionListener {
 		getContentPane().add(taskEndLabel);
 
 		taskEndField = new JTextField();
-		taskEndField.setBounds(764, 232, 200, 20);
+		taskEndField.setBounds(764, 232, 200, 30);
 		getContentPane().add(taskEndField);
 
 		status = new JLabel(" Status: ");
@@ -188,15 +187,17 @@ public class Home extends JFrame implements ActionListener {
 		taskDescField = new JTextArea();
 		taskDescField.setBackground(new Color(255, 255, 255));
 		Border border = BorderFactory.createLineBorder(Color.BLACK);
-		taskDescField.setBorder(BorderFactory.createCompoundBorder(border, 
-		      BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+		taskDescField
+				.setBorder(BorderFactory.createCompoundBorder(border, BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 		taskDescField.setBounds(537, 393, 400, 70);
 		getContentPane().add(taskDescField);
 
-		backButton = new JButton("Profile");
-		backButton.setBackground(Color.BLUE);
-		backButton.setBounds(850, 11, 124, 40);
-		getContentPane().add(backButton);
+		profileBtn = new JButton("Profile");
+		profileBtn.setBackground(Color.BLUE);
+		profileBtn.setBounds(850, 11, 124, 40);
+		profileBtn.addActionListener(this);
+		getContentPane().add(profileBtn);
+		
 		//
 		setSize(1000, 800);
 		setLocationRelativeTo(null);
@@ -251,10 +252,10 @@ public class Home extends JFrame implements ActionListener {
 			// Update the table model with the new data
 			tableModel.setDataVector(data.getAllTasks(user_id), columns);
 			// Get the TableColumnModel
-	        TableColumnModel columnModel = table.getColumnModel();
-	        // Hide the "Task id" column
-	        TableColumn taskIDColumn = columnModel.getColumn(0);
-	        columnModel.removeColumn(taskIDColumn);
+			TableColumnModel columnModel = table.getColumnModel();
+			// Hide the "Task id" column
+			TableColumn taskIDColumn = columnModel.getColumn(0);
+			columnModel.removeColumn(taskIDColumn);
 			// Notify the table that the data has changed
 			tableModel.fireTableDataChanged();
 		} catch (Exception e) {
@@ -298,10 +299,6 @@ public class Home extends JFrame implements ActionListener {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else if (ae.getSource() == viewJob) {
-			ViewJob vj = new ViewJob();
-			vj.setVisible(true);
-			Home.this.setVisible(false);
 		} else if (ae.getSource() == updateJob) {
 			String name = taskNameField.getText();
 			String type = taskTypeField.getText();
@@ -340,13 +337,15 @@ public class Home extends JFrame implements ActionListener {
 				e.printStackTrace();
 			}
 		} else if (ae.getSource() == deleteJob) {
-			
-			
+
+			// to delete a task
 			if (sel_task_id > 0) {
-				
-				int confirmResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this selected Task ?", "Confirmation", JOptionPane.YES_NO_OPTION);
-	            if (confirmResult == JOptionPane.YES_OPTION) {
-	            	DataAccess db = new DataAccess();
+
+				int confirmResult = JOptionPane.showConfirmDialog(null,
+						"Are you sure you want to delete this selected Task ?", "Confirmation",
+						JOptionPane.YES_NO_OPTION);
+				if (confirmResult == JOptionPane.YES_OPTION) {
+					DataAccess db = new DataAccess();
 					String deleteQuery = "DELETE FROM tasks WHERE task_id = " + sel_task_id;
 
 					int resp = db.executeQueryUpdate(deleteQuery);
@@ -356,11 +355,14 @@ public class Home extends JFrame implements ActionListener {
 					} else {
 						JOptionPane.showMessageDialog(null, "Task has not deleted.");
 					}
-	            }
-				
+				}
+
 			} else {
 				JOptionPane.showMessageDialog(null, "Please select a task first to delete");
 			}
+
+		} else if (ae.getSource() == profileBtn) {
+			
 
 		} else {
 

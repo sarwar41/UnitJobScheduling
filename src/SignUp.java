@@ -11,6 +11,7 @@ class SignUp extends JFrame implements ActionListener {
 	private JTextField textUsername;
 	private JPasswordField textPassword;
 	private JButton buttonSignup, buttonCancel;
+	private JTextField profileNameTextField;
 
 	public SignUp() {
 		this.InitializeComponents();
@@ -23,19 +24,19 @@ class SignUp extends JFrame implements ActionListener {
 		panel.setBackground(Color.white);
 
 		labelUsername = new JLabel("Email");
-		labelUsername.setBounds(295, 173, 47, 20);
+		labelUsername.setBounds(257, 173, 47, 20);
 		panel.add(labelUsername);
 
 		textUsername = new JTextField();
-		textUsername.setBounds(354, 173, 150, 20);
+		textUsername.setBounds(354, 173, 175, 20);
 		panel.add(textUsername);
 
 		labelPassword = new JLabel("Password");
-		labelPassword.setBounds(277, 225, 65, 20);
+		labelPassword.setBounds(257, 205, 65, 20);
 		panel.add(labelPassword);
 
 		textPassword = new JPasswordField();
-		textPassword.setBounds(354, 225, 150, 20);
+		textPassword.setBounds(354, 205, 175, 20);
 		panel.add(textPassword);
 
 //		panel.add(buttonCancel);
@@ -57,6 +58,14 @@ class SignUp extends JFrame implements ActionListener {
 		buttonSignup = new JButton("Sign Up");
 		buttonSignup.setBounds(384, 267, 120, 30);
 		panel.add(buttonSignup);
+		
+		profileNameTextField = new JTextField();
+		profileNameTextField.setBounds(354, 136, 175, 20);
+		panel.add(profileNameTextField);
+		
+		JLabel lblUserName = new JLabel("User Name");
+		lblUserName.setBounds(257, 136, 85, 20);
+		panel.add(lblUserName);
 		buttonSignup.addActionListener(this);
 		
 		
@@ -73,6 +82,7 @@ class SignUp extends JFrame implements ActionListener {
 
 			String username = textUsername.getText();
 			String password = textPassword.getText();
+			String profile_name = profileNameTextField.getText();
 
 			Utils utils = new Utils();
 			boolean email_verified = utils.isEmailValid(username);
@@ -83,7 +93,7 @@ class SignUp extends JFrame implements ActionListener {
 				return;
 			}
 			DataAccess api = new DataAccess();
-			String resp = api.signUp(username, password);
+			String resp = api.signUp(username, password,profile_name);
 			JOptionPane.showMessageDialog(null, resp, "Message", JOptionPane.INFORMATION_MESSAGE);
 		}
 		if (ae.getSource() == buttonCancel) {

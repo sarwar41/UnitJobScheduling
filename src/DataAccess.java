@@ -77,7 +77,7 @@ class DataAccess {
 	}
 
 	// create a new user
-	public String signUp(String username, String password) {
+	public String signUp(String username, String password, String name) {
 		PreparedStatement preparedStatement = null;
 		try {
 			if (this.con != null) {
@@ -103,6 +103,7 @@ class DataAccess {
 				preparedStatement.setString(2, username);
 				preparedStatement.setString(3, passwordHashing(password));
 				preparedStatement.setString(4, "user");
+				preparedStatement.setString(5, name);
 
 				// Execute the query to insert user information
 				int rowsAffected = preparedStatement.executeUpdate();
