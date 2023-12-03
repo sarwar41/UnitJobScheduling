@@ -34,7 +34,7 @@ class DataAccess {
 	}
 
 	// executeQuery
-	private ResultSet executeQuery(String sql) {
+	ResultSet executeQuery(String sql) {
 		try {
 			return this.stm.executeQuery(sql);
 		} catch (SQLException ex) {
@@ -130,7 +130,7 @@ class DataAccess {
 	}
 
 	// hash password
-	private static String passwordHashing(String password) {
+	String passwordHashing(String password) {
 
 		try {
 			// Create a MessageDigest object with the SHA-256 algorithm

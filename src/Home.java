@@ -362,7 +362,10 @@ public class Home extends JFrame implements ActionListener {
 			}
 
 		} else if (ae.getSource() == profileBtn) {
-			
+			System.out.print("adsad");
+			UserProfile pf = new UserProfile();
+			pf.setVisible(true);
+			Home.this.setVisible(false);
 
 		} else {
 
