@@ -1,0 +1,156 @@
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+public class UserProfile extends JFrame implements ActionListener {
+    private JPanel panel;
+    private JLabel labelUsername, labelPassword, labelName, labelId, labelId2, labelImage, labelUserType, labelOccupation;
+    private JTextField textUsername, textPassword, textName, textUserType, textOccupation;
+    private JButton btnSave;
+
+    UserProfile() {
+        panel = new JPanel();
+        panel.setLayout(null);
+        panel.setBackground(Color.LIGHT_GRAY);
+
+        getContentPane().setBackground(Color.WHITE);
+        getContentPane().setLayout(null);
+
+        labelImage = new JLabel();
+        ImageIcon profileIcon = new ImageIcon("img/profilelogo.png");
+        Image image = profileIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        labelImage.setIcon(new ImageIcon(image));
+        labelImage.setBounds(400, 10, 100, 100);
+        add(labelImage);
+
+        labelUsername = new JLabel("Username:");
+        labelUsername.setBounds(50, 50, 100, 30);
+        add(labelUsername);
+        textUsername = new JTextField();
+        textUsername.setBounds(150, 50, 200, 30);
+        add(textUsername);
+
+        labelPassword = new JLabel("Password:");
+        labelPassword.setBounds(50, 100, 100, 30);
+        add(labelPassword);
+        textPassword = new JTextField();
+        textPassword.setBounds(150, 100, 200, 30);
+        add(textPassword);
+
+        labelName = new JLabel("Name:");
+        labelName.setBounds(50, 150, 100, 30);
+        add(labelName);
+        textName = new JTextField();
+        textName.setBounds(150, 150, 200, 30);
+        add(textName);
+
+        labelId = new JLabel("User ID:");
+        labelId.setBounds(50, 200, 100, 30);
+        add(labelId);
+        labelId2 = new JLabel();
+        labelId2.setBounds(150, 200, 200, 30);
+        add(labelId2);
+
+        labelUserType = new JLabel("User Type:");
+        labelUserType.setBounds(50, 250, 100, 30);
+        add(labelUserType);
+        textUserType = new JTextField();
+        textUserType.setBounds(150, 250, 200, 30);
+        add(textUserType);
+
+        labelOccupation = new JLabel("Occupation:");
+        labelOccupation.setBounds(50, 300, 100, 30);
+        add(labelOccupation);
+        textOccupation = new JTextField();
+        textOccupation.setBounds(150, 300, 200, 30);
+        add(textOccupation);
+
+        try {
+            Conn con = new Conn();
+            String query = "select * from users";
+            ResultSet rs = con.stm.executeQuery(query);
+
+            while (rs.next()) {
+                textUsername.setText(rs.getString("user_name"));
+                textPassword.setText(rs.getString("user_password"));
+                labelId2.setText(rs.getString("user_id"));
+                textName.setText(rs.getString("name1"));
+                textUserType.setText(rs.getString("user_type"));
+                textOccupation.setText(rs.getString("occupation"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        btnSave = new JButton("Save");
+        btnSave.setBounds(200, 350, 100, 30);
+        btnSave.addActionListener(this);
+        add(btnSave);
+
+        this.add(panel);
+
+        this.setSize(600, 500);
+        this.setLocationRelativeTo(null);
+        this.setTitle("User Profile");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        if (ae.getSource() == btnSave) {
+            saveToDatabase();
+        }
+    }
+
+    private void saveToDatabase() {
+        try {
+            Conn conn = new Conn();
+            String userId = labelId2.getText();
+            String userName = textUsername.getText();
+            String password = textPassword.getText();
+            String name = textName.getText();
+            String userType = textUserType.getText();
+            String occupation = textOccupation.getText();
+
+            String query = "update users set user_name='" + userName + "', user_password='" + password
+                    + "', name1='" + name + "', user_type='" + userType + "', occupation='" + occupation
+                    + "' where user_id=" + userId;
+
+            conn.stm.executeUpdate(query);
+
+            JOptionPane.showMessageDialog(null, "Details saved to database.", "Message",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        UserProfile userProfile = new UserProfile();
+        userProfile.setVisible(true);
+        
+        
+        
+    }
+}
+
+
+
+
+
+
+
