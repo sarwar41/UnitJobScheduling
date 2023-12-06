@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.*;
 
-class SignUp extends JFrame implements ActionListener {
+public class SignUp extends JFrame implements ActionListener {
 
 	private JPanel panel;
 	private JLabel labelUsername, labelPassword, labelimg;
@@ -13,12 +13,7 @@ class SignUp extends JFrame implements ActionListener {
 	private JButton buttonSignup, buttonCancel;
 	private JTextField profileNameTextField;
 
-	public SignUp() {
-		this.InitializeComponents();
-	}
-
-	private void InitializeComponents() {
-
+	SignUp() {
 		panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(Color.white);
@@ -81,16 +76,15 @@ class SignUp extends JFrame implements ActionListener {
 		if (ae.getSource() == buttonSignup) {
 
 			String username = textUsername.getText();
-			String password = textPassword.getText();
+			String password = String.valueOf(textPassword.getPassword());
 			String profile_name = profileNameTextField.getText();
 
-			Utils utils = new Utils();
-			boolean email_verified = utils.isEmailValid(username);
+			boolean email_verified = Utils.isEmailValid(username);
 			if (!email_verified) {
 				JOptionPane.showMessageDialog(null,
 						"Your provided email is not a valid email, Please Provide a valid email.", "Message",
-						JOptionPane.INFORMATION_MESSAGE);
-				return;
+						JOptionPane.INFORMATION_MESSAGE); 
+				return ;
 			}
 			DataAccess api = new DataAccess();
 			String resp = api.signUp(username, password,profile_name);

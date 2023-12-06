@@ -31,9 +31,9 @@ public class Home extends JFrame implements ActionListener {
 	private JTable table;
 	private DefaultTableModel tableModel;
 	private JScrollPane scrollPane;
-	private JLabel taskNameLabel, taskTypeLabel, taskDescLabel, taskStartLabel, taskEndLabel, status, priority;
+	private JLabel taskNameLabel, taskTypeLabel, taskDescLabel, taskStartLabel, taskEndLabel, status, priority,lblScheduledBy;
 	private JTextField taskNameField, taskTypeField, taskStartField, taskEndField;
-	private JComboBox statusDropdown, priorityDropdown;
+	private JComboBox statusDropdown, priorityDropdown,scheduleDropdown;
 	private JTextArea taskDescField;
 	private int sel_task_id;
 	private String user_id;
@@ -73,7 +73,16 @@ public class Home extends JFrame implements ActionListener {
 		deleteJob.setBounds(809, 538, 124, 40);
 		deleteJob.addActionListener(this);
 		getContentPane().add(deleteJob);
-
+		//
+		lblScheduledBy = new JLabel(" Scheduled By: ");
+		lblScheduledBy.setBounds(17, 60, 100, 30);
+		getContentPane().add(lblScheduledBy);
+		//
+		String scheduleList[] = { "Priority", "Deadline", "Both"};
+		scheduleDropdown = new JComboBox(scheduleList);
+		scheduleDropdown.setBounds(113, 55, 180, 40);
+		getContentPane().add(scheduleDropdown);
+		//
 		getContentPane().add(panel);
 
 //		table = new JTable();
@@ -90,7 +99,7 @@ public class Home extends JFrame implements ActionListener {
 		columns.add("End Date");
 		columns.add("Priority");
 		DataAccess data = new DataAccess();
-		tableModel = new DefaultTableModel(data.getAllTasks(user_id), columns);
+		tableModel = new DefaultTableModel(data.scheduleTasks(data.getAllTasks(user_id), "Priority"), columns);
 		table = new JTable(tableModel) {
 			public boolean isCellEditable(int row, int column) {
 				if (column == 0)
@@ -175,7 +184,7 @@ public class Home extends JFrame implements ActionListener {
 		priority.setBounds(764, 264, 100, 30);
 		getContentPane().add(priority);
 
-		String priorityList[] = { "Choose Priority", "Low", "Medium", "High", "Critical" };
+		String priorityList[] = { "Low", "Medium", "High" };
 		priorityDropdown = new JComboBox(priorityList);
 		priorityDropdown.setBounds(764, 294, 180, 40);
 		getContentPane().add(priorityDropdown);
@@ -233,10 +242,19 @@ public class Home extends JFrame implements ActionListener {
 				}
 			}
 		});
+		
+		scheduleDropdown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //
+            	
+            	refreshTable();
+            }
+        });
 	}
 
 	//
-	private void refreshTable() {
+	public void refreshTable() {
 		try {
 			DataAccess data = new DataAccess();
 			Vector<String> columns = new Vector<String>();
@@ -248,9 +266,9 @@ public class Home extends JFrame implements ActionListener {
 			columns.add("Start Date");
 			columns.add("End Date");
 			columns.add("Priority");
-
+			System.out.println("scheduleDropdown performed"+(String) scheduleDropdown.getSelectedItem());
 			// Update the table model with the new data
-			tableModel.setDataVector(data.getAllTasks(user_id), columns);
+			tableModel.setDataVector(data.scheduleTasks(data.getAllTasks(user_id), (String) scheduleDropdown.getSelectedItem()), columns);
 			// Get the TableColumnModel
 			TableColumnModel columnModel = table.getColumnModel();
 			// Hide the "Task id" column
@@ -284,9 +302,9 @@ public class Home extends JFrame implements ActionListener {
 
 			try {
 				DataAccess db = new DataAccess();
-				String insertQuery = "INSERT INTO tasks (name, type, startdate, enddate, status, priority, description) "
+				String insertQuery = "INSERT INTO tasks (name, type, startdate, enddate, status, priority, description, user_id) "
 						+ "VALUES ('" + name + "', '" + type + "', '" + startdate + "', '" + enddate + "', '" + status
-						+ "', '" + priority + "', '" + description + "')";
+						+ "', '" + priority + "', '" + description + "','" + user_id + "')";
 
 				int resp = db.executeQueryUpdate(insertQuery);
 				if (resp > 0) {

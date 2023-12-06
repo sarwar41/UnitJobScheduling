@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.*;
 
-class SignIn extends JFrame implements ActionListener {
+public class SignIn extends JFrame implements ActionListener {
 
 	private JPanel panel;
 	private JLabel labelUsername, labelPassword, labelimg;
@@ -12,11 +12,7 @@ class SignIn extends JFrame implements ActionListener {
 	private JPasswordField textPassword;
 	private JButton buttonLogin, buttonSignup;
 
-	public SignIn() {
-		this.InitializeComponents();
-	}
-
-	private void InitializeComponents() {
+	SignIn() {
 		panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(Color.white);

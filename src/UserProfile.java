@@ -1,9 +1,9 @@
 import java.awt.Color;
-import java.awt.Font;
+//import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
-import java.util.Vector;
+//import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,8 +12,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
+//import javax.swing.table.TableColumn;
+//import javax.swing.table.TableColumnModel;
 
 public class UserProfile extends JFrame implements ActionListener {
 
@@ -105,16 +105,19 @@ public class UserProfile extends JFrame implements ActionListener {
 	}
 
 	//
-	private void loadProfile() {
+	void loadProfile() {
 		try {
 			DataAccess db = new DataAccess();
 			String query = "select user_name, profile_name,user_password from users WHERE user_id = '" + user_id + "' ";
 			ResultSet rs = db.executeQuery(query);
-			while (rs.next()) {
-				user_pass = rs.getString("user_password");
-				nameTextField.setText(rs.getString("profile_name"));
-				emailTextField.setText(rs.getString("user_name"));
+			if (rs != null) {
+				while (rs.next()) {
+					user_pass = rs.getString("user_password");
+					nameTextField.setText(rs.getString("profile_name"));
+					emailTextField.setText(rs.getString("user_name"));
+				}
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -140,8 +143,8 @@ public class UserProfile extends JFrame implements ActionListener {
 			loadProfile();
 		} else if (ae.getSource() == btnUpdatePassword) {
 
-			String old_pass = oldPasstextField.getText();
-			String new_pass = newPasstextField.getText();
+			String old_pass = String.valueOf(oldPasstextField.getPassword());
+			String new_pass = String.valueOf(newPasstextField.getPassword());
 
 			DataAccess db = new DataAccess();
 			if (!new_pass.isEmpty() && !old_pass.isEmpty()) {

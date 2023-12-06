@@ -1,9 +1,15 @@
 import java.sql.Connection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.sql.*;
 import java.util.Vector;
 import java.security.MessageDigest;
 
-class DataAccess {
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Date;
+public class DataAccess {
 
 	private static final String DB_URL = "jdbc:mysql://localhost:3306/unitjobscheduling";
 	private static final String DB_USER = "root";
@@ -11,8 +17,7 @@ class DataAccess {
 	private Connection con;
 	private Statement stm;
 
-	public DataAccess() {
-
+	DataAccess() {
 		this.initializeDatabaseConnection();
 	}
 
@@ -36,7 +41,10 @@ class DataAccess {
 	// executeQuery
 	ResultSet executeQuery(String sql) {
 		try {
-			return this.stm.executeQuery(sql);
+			if(this.con != null)
+				return this.stm.executeQuery(sql);
+			else
+				return null;
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 			return null;
@@ -46,9 +54,13 @@ class DataAccess {
 	// executeQuery update
 	int executeQueryUpdate(String sql) {
 		try {
-			int rowsAffected = this.stm.executeUpdate(sql);
-
-			return rowsAffected;
+			if(this.con != null) {
+				int rowsAffected = this.stm.executeUpdate(sql);
+				return rowsAffected;
+			}
+			else
+				return -1;
+			
 
 		} catch (SQLException ex) {
 			ex.printStackTrace();
@@ -189,5 +201,86 @@ class DataAccess {
 				"priority" };
 		return fetchInfo(sql, columnNames);
 	}
+	//
+	public Vector<Vector<String>> scheduleTasks(Vector<Vector<String>> dataList, String sort_by) {
+        // Priority Scheduling
+//        Collections.sort(dataList, Comparator.comparing(task -> task.get(6)));
+        Collections.sort(dataList, new SortComparator(sort_by)); 
+        return dataList;
+        // Deadline Scheduling within the same priority
+//        Collections.sort(dataList, Comparator.comparing(task -> task.get(4)));
+    }
 
+
+
+}
+class SortComparator implements Comparator<Vector<String>> {
+
+    private static final List<String> PRIORITY_ORDER = List.of("High", "Medium", "Low");
+    private String sort_by;
+
+    public SortComparator(String sort_by) {
+        this.sort_by = sort_by;
+    }
+    @Override
+    public int compare(Vector<String> task1, Vector<String> task2) {
+    	System.out.println("this.sort_by performed"+this.sort_by);
+    	if(this.sort_by.equals("Priority")) {
+	    	String priority1 = task1.get(7);  // Assuming priority is at index 6
+	        String priority2 = task2.get(7);
+	
+	        // Compare based on priority first
+	        int priorityComparison = Integer.compare(PRIORITY_ORDER.indexOf(priority1), PRIORITY_ORDER.indexOf(priority2));
+	        
+	        if (priorityComparison != 0) {
+	            return priorityComparison;  // If priorities are different, return the comparison result
+	        }
+    	}
+        // If priorities are the same, compare based on deadlines
+    	else if(this.sort_by.equals("Deadline")) {
+//        	 String deadline1 = task1.get(6);  
+//             String deadline2 = task2.get(6);
+//
+//             return deadline1.compareTo(deadline2);
+    		 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+             Date date1,date2;
+			try {
+				date1 = dateFormat.parse(task1.get(6));
+				date2 = dateFormat.parse(task2.get(6));
+				
+				return date1.compareTo(date2);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+             // Compare the dates
+             
+             
+
+             // Compare the dates
+             
+        }else if (this.sort_by.equals("Both")){
+        	String priority1 = task1.get(7);  // Assuming priority is at index 6
+	        String priority2 = task2.get(7);
+	
+	        // Compare based on priority first
+	        Integer.compare(PRIORITY_ORDER.indexOf(priority1), PRIORITY_ORDER.indexOf(priority2));
+	        
+	        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	        Date date1,date2;
+			
+	        try {
+				date1 = dateFormat.parse(task1.get(6));
+				date2 = dateFormat.parse(task2.get(6));
+				
+				return date1.compareTo(date2);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+		return 0;
+       
+    }
 }

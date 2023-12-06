@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-class Utils {
+public class Utils {
 
-	public Utils() {
+	Utils() {
 
 	}
 
@@ -31,7 +31,7 @@ class Utils {
 	}
 
 	//
-	public void saveUserloggedInData(String user_id) {
+	public static void saveUserloggedInData(String user_id) {
 		try (OutputStream output = new FileOutputStream("localStorage.properties")) {
 			Properties properties = new Properties();
 			properties.setProperty("user_id", user_id);
