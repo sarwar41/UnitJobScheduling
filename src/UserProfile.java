@@ -2,6 +2,7 @@ import java.awt.Color;
 //import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.sql.ResultSet;
 //import java.util.Vector;
 
@@ -19,15 +20,26 @@ public class UserProfile extends JFrame implements ActionListener {
 
 	private JPanel panel;
 	private JLabel nameLabel, emailLabel;
-	private JTextField nameTextField, emailTextField;
-	private JButton updateButton, backButton, btnUpdatePassword;
-	private JPasswordField oldPasstextField, newPasstextField;
-	private String user_id, user_pass;
-
+	JTextField nameTextField;
+	JTextField emailTextField;
+	JButton updateButton;
+	JButton backButton;
+	JButton btnUpdatePassword;
+	JPasswordField oldPasstextField, newPasstextField;
+	 String user_id;
+	String user_pass;
+	public DataAccess db;
+	public Home home;
+	public String rsp = null; 
 	UserProfile() {
 		Utils utils = new Utils();
-		String resp = utils.loadUserloggedInData();
-		user_id = resp;
+		try {
+			String resp = utils.loadUserloggedInData();
+			user_id = resp;
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
 
 		panel = new JPanel();
 		panel.setLayout(null);
@@ -112,9 +124,11 @@ public class UserProfile extends JFrame implements ActionListener {
 			ResultSet rs = db.executeQuery(query);
 			if (rs != null) {
 				while (rs.next()) {
+					
 					user_pass = rs.getString("user_password");
 					nameTextField.setText(rs.getString("profile_name"));
 					emailTextField.setText(rs.getString("user_name"));
+					rsp = "Load Complete";
 				}
 			}
 			
@@ -122,54 +136,65 @@ public class UserProfile extends JFrame implements ActionListener {
 			e.printStackTrace();
 		}
 	}
+	//
+	void updateProfileInfo() {
+		String email = emailTextField.getText();
+		String name = nameTextField.getText();
+
+		DataAccess db = new DataAccess();
+		String updateQuery = "update users set profile_name='" + name + "', user_name='" + email
+				+ "' where user_id=" + user_id;
+
+		int resp = db.executeQueryUpdate(updateQuery);
+		if (resp > 0) {
+			JOptionPane.showMessageDialog(null, "Details are updated Successfully");
+			loadProfile();
+			rsp =  "Details are updated Successfully";
+		} else {
+			JOptionPane.showMessageDialog(null, "Details are not updated");
+//			rsp =  "Details are not updated";
+		}
+	}
+	//
+	void updateProfilePassword() {
+		String old_pass = String.valueOf(oldPasstextField.getPassword());
+		String new_pass = String.valueOf(newPasstextField.getPassword());
+
+		DataAccess db = new DataAccess();
+		if (!new_pass.isEmpty() && !old_pass.isEmpty()) {
+			if (db.passwordHashing(old_pass).equals(user_pass)) {
+
+				String updateQuery = "UPDATE users SET " + "user_password='" + db.passwordHashing(new_pass) + "' "
+						+ "WHERE user_id=" + user_id;
+
+				int resp = db.executeQueryUpdate(updateQuery);
+				if (resp > 0) {
+					JOptionPane.showMessageDialog(null, "New Password has updated succesfully.");
+					rsp =  "New Password has updated succesfully.";
+					loadProfile();
+				} else {
+					JOptionPane.showMessageDialog(null, "Password has not updated successfully");
+
+				}
+			} else {
+				JOptionPane.showMessageDialog(null, "Old password doesn't match");
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "Please enter your old and new password");
+		}
+	}
 
 	//
 	public void actionPerformed(ActionEvent ae) {
 
 		if (ae.getSource() == updateButton) {
-			String email = emailTextField.getText();
-			String name = nameTextField.getText();
-
-			DataAccess db = new DataAccess();
-			String updateQuery = "update users set profile_name='" + name + "', user_name='" + email
-					+ "' where user_id=" + user_id;
-
-			int resp = db.executeQueryUpdate(updateQuery);
-			if (resp > 0) {
-				JOptionPane.showMessageDialog(null, "Details are updated Successfully");
-			} else {
-				JOptionPane.showMessageDialog(null, "Details are not updated");
-			}
-			loadProfile();
+			updateProfileInfo();
 		} else if (ae.getSource() == btnUpdatePassword) {
-
-			String old_pass = String.valueOf(oldPasstextField.getPassword());
-			String new_pass = String.valueOf(newPasstextField.getPassword());
-
-			DataAccess db = new DataAccess();
-			if (!new_pass.isEmpty() && !old_pass.isEmpty()) {
-				if (db.passwordHashing(old_pass).equals(user_pass)) {
-
-					String updateQuery = "UPDATE users SET " + "user_password='" + db.passwordHashing(new_pass) + "' "
-							+ "WHERE user_id=" + user_id;
-
-					int resp = db.executeQueryUpdate(updateQuery);
-					if (resp > 0) {
-						JOptionPane.showMessageDialog(null, "New Password has updated succesfully.");
-					} else {
-						JOptionPane.showMessageDialog(null, "Password hasn not updated successfully");
-
-					}
-				} else {
-					JOptionPane.showMessageDialog(null, "Old password doesn't match");
-				}
-			} else {
-				JOptionPane.showMessageDialog(null, "Please enter your old and new password");
-			}
-			loadProfile();
+			updateProfilePassword();
+			
 		} else if (ae.getSource() == backButton) {
-			Home hv = new Home();
-			hv.setVisible(true);
+			home = new Home();
+			home.setVisible(true);
 			UserProfile.this.setVisible(false);
 		} else {
 

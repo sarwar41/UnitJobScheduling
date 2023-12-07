@@ -22,7 +22,7 @@ public class DataAccess {
 	}
 
 	// check database connection
-	private void initializeDatabaseConnection() {
+	public void initializeDatabaseConnection() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			this.con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
@@ -37,14 +37,26 @@ public class DataAccess {
 			ex.printStackTrace();
 		}
 	}
+	//
+	Connection getConnection(){
+		return this.con;
+	}
+	//
+	boolean isConnected(){
+		return this.con != null ? true : false;
+	}
+	//
+	void closeConnection(){
+		this.con = null;
+		this.stm = null;
 
+	}
 	// executeQuery
 	ResultSet executeQuery(String sql) {
 		try {
 			if(this.con != null)
 				return this.stm.executeQuery(sql);
-			else
-				return null;
+			else return null;
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 			return null;
@@ -60,7 +72,6 @@ public class DataAccess {
 			}
 			else
 				return -1;
-			
 
 		} catch (SQLException ex) {
 			ex.printStackTrace();
@@ -108,7 +119,7 @@ public class DataAccess {
 						preparedStatement.close();
 					}
 				}
-				String sql = "INSERT INTO users (user_id , user_name, user_password, user_type) VALUES (?, ?, ?, ?)";
+				String sql = "INSERT INTO users (user_id , user_name, user_password, user_type, profile_name) VALUES (?, ?, ?, ?,?)";
 				preparedStatement = this.con.prepareStatement(sql);
 
 				preparedStatement.setString(1, Long.toString(epochTime));
@@ -214,6 +225,7 @@ public class DataAccess {
 
 
 }
+//
 class SortComparator implements Comparator<Vector<String>> {
 
     private static final List<String> PRIORITY_ORDER = List.of("High", "Medium", "Low");
@@ -224,24 +236,20 @@ class SortComparator implements Comparator<Vector<String>> {
     }
     @Override
     public int compare(Vector<String> task1, Vector<String> task2) {
-    	System.out.println("this.sort_by performed"+this.sort_by);
+    	// Compare based on priority
     	if(this.sort_by.equals("Priority")) {
-	    	String priority1 = task1.get(7);  // Assuming priority is at index 6
+	    	String priority1 = task1.get(7); 
 	        String priority2 = task2.get(7);
 	
-	        // Compare based on priority first
+	        
 	        int priorityComparison = Integer.compare(PRIORITY_ORDER.indexOf(priority1), PRIORITY_ORDER.indexOf(priority2));
 	        
 	        if (priorityComparison != 0) {
 	            return priorityComparison;  // If priorities are different, return the comparison result
 	        }
     	}
-        // If priorities are the same, compare based on deadlines
+    	// Compare based on end date
     	else if(this.sort_by.equals("Deadline")) {
-//        	 String deadline1 = task1.get(6);  
-//             String deadline2 = task2.get(6);
-//
-//             return deadline1.compareTo(deadline2);
     		 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
              Date date1,date2;
 			try {
@@ -253,18 +261,13 @@ class SortComparator implements Comparator<Vector<String>> {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-             // Compare the dates
              
-             
-
-             // Compare the dates
-             
-        }else if (this.sort_by.equals("Both")){
-        	String priority1 = task1.get(7);  // Assuming priority is at index 6
+        }
+    	// Compare based on priority and end date 
+    	else if (this.sort_by.equals("Both")){
+        	String priority1 = task1.get(7);  
 	        String priority2 = task2.get(7);
 	
-	        // Compare based on priority first
 	        Integer.compare(PRIORITY_ORDER.indexOf(priority1), PRIORITY_ORDER.indexOf(priority2));
 	        
 	        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");

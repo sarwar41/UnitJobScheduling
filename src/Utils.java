@@ -17,46 +17,29 @@ public class Utils {
 	// email check
 	public static boolean isEmailValid(String email) {
 
-		try {
-			String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-			Pattern pattern = Pattern.compile(EMAIL_REGEX);
-
-			Matcher matcher = pattern.matcher(email);
-			return matcher.matches();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+		String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+		Pattern pattern = Pattern.compile(EMAIL_REGEX);
+		Matcher matcher = pattern.matcher(email);
+		return matcher.matches();
 	}
 
 	//
-	public static void saveUserloggedInData(String user_id) {
+	public static void saveUserloggedInData(String user_id) throws IOException {
 		try (OutputStream output = new FileOutputStream("localStorage.properties")) {
 			Properties properties = new Properties();
 			properties.setProperty("user_id", user_id);
 			properties.store(output, null);
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
-	public String loadUserloggedInData() {
+	public String loadUserloggedInData() throws IOException {
 		Properties properties = new Properties();
 		File file = new File("localStorage.properties");
 
-		if (file.exists()) {
-			try (InputStream input = new FileInputStream(file)) {
-				properties.load(input);
-				return properties.getProperty("user_id", "");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else {
-			System.out.println("File does not exist. Returning empty data.");
+		try (InputStream input = new FileInputStream(file)) {
+			properties.load(input);
+			return properties.getProperty("user_id", "");
 		}
-		return properties.getProperty("data", "");
-
 	}
 
 }

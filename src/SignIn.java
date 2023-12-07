@@ -3,14 +3,18 @@ import javax.swing.*;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.*;
+import java.io.IOException;
 
 public class SignIn extends JFrame implements ActionListener {
 
 	private JPanel panel;
 	private JLabel labelUsername, labelPassword, labelimg;
-	private JTextField textUsername;
-	private JPasswordField textPassword;
-	private JButton buttonLogin, buttonSignup;
+	JTextField textUsername;
+	JPasswordField textPassword;
+	 JButton buttonLogin, buttonSignup;
+	public DataAccess api;
+	public SignUp signup;
+	public Home home;
 
 	SignIn() {
 		panel = new JPanel();
@@ -77,12 +81,19 @@ public class SignIn extends JFrame implements ActionListener {
 						JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			DataAccess api = new DataAccess();
+			api = new DataAccess();
 			String resp = api.isUserValid(username, password);
 			if (!resp.isEmpty()) {
-				utils.saveUserloggedInData(resp);
-				Home hm = new Home();
-				hm.setVisible(true);
+				
+				 try {
+					 utils.saveUserloggedInData(resp);
+			        } catch (IOException e) {
+			            e.printStackTrace();
+			            // Handle the exception as needed
+			        }
+				
+				 home = new Home();
+				 home.setVisible(true);
 				SignIn.this.setVisible(false);
 			} else {
 				JOptionPane.showMessageDialog(null, "You've entered wrong email and password", "Message",
@@ -92,8 +103,8 @@ public class SignIn extends JFrame implements ActionListener {
 		}
 		if (ae.getSource() == buttonSignup) {
 
-			SignUp su = new SignUp();
-			su.setVisible(true);
+			signup = new SignUp();
+			signup.setVisible(true);
 			SignIn.this.setVisible(false);
 		}
 

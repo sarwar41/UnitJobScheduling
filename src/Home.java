@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -40,7 +41,14 @@ public class Home extends JFrame implements ActionListener {
 
 	Home() {
 		Utils utils = new Utils();
-		String resp = utils.loadUserloggedInData();
+		String resp = null ;
+		try {
+			resp = utils.loadUserloggedInData();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }		
+		
 		user_id = resp;
 		panel = new JPanel();
 		panel.setLayout(null);

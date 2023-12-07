@@ -8,11 +8,14 @@ public class SignUp extends JFrame implements ActionListener {
 
 	private JPanel panel;
 	private JLabel labelUsername, labelPassword, labelimg;
-	private JTextField textUsername;
-	private JPasswordField textPassword;
-	private JButton buttonSignup, buttonCancel;
-	private JTextField profileNameTextField;
-
+	 JTextField textUsername;
+	 JPasswordField textPassword;
+	 JButton buttonSignup, buttonCancel;
+	 JTextField profileNameTextField;
+	 public DataAccess api;
+	 public Utils utils;
+	 public SignIn signIn;
+	 public String resp = null;
 	SignUp() {
 		panel = new JPanel();
 		panel.setLayout(null);
@@ -63,7 +66,7 @@ public class SignUp extends JFrame implements ActionListener {
 		panel.add(lblUserName);
 		buttonSignup.addActionListener(this);
 		
-		
+	
 		setSize(700, 600);
 		setLocationRelativeTo(null);
 		setTitle("User Signup");
@@ -78,24 +81,38 @@ public class SignUp extends JFrame implements ActionListener {
 			String username = textUsername.getText();
 			String password = String.valueOf(textPassword.getPassword());
 			String profile_name = profileNameTextField.getText();
-
-			boolean email_verified = Utils.isEmailValid(username);
-			if (!email_verified) {
-				JOptionPane.showMessageDialog(null,
-						"Your provided email is not a valid email, Please Provide a valid email.", "Message",
-						JOptionPane.INFORMATION_MESSAGE); 
-				return ;
-			}
-			DataAccess api = new DataAccess();
-			String resp = api.signUp(username, password,profile_name);
-			JOptionPane.showMessageDialog(null, resp, "Message", JOptionPane.INFORMATION_MESSAGE);
+			//
+			handleSignUpButton(username,password,profile_name);
+		
 		}
 		if (ae.getSource() == buttonCancel) {
 
-			SignIn si = new SignIn();
-			si.setVisible(true);
+			signIn = new SignIn();
+			signIn.setVisible(true);
 			SignUp.this.setVisible(false);
 		}
 
 	}
+	//
+	public void handleSignUpButton(String username, String password, String profileName) {
+        if (username.isEmpty()) {
+            showMessage("Please enter your email address.");
+        } else if (password.isEmpty()) {
+            showMessage("Please enter your password.");
+        } else {
+            boolean emailVerified = utils.isEmailValid(username);
+            if (!emailVerified) {
+                showMessage("Your provided email is not a valid email. Please provide a valid email.");
+                return;
+            }
+            api = new DataAccess();
+            resp = api.signUp(username, password, profileName);
+            
+            showMessage(resp);
+        }
+    }
+	
+    void showMessage(String message) {
+        JOptionPane.showMessageDialog(null, message, "Message", JOptionPane.INFORMATION_MESSAGE);
+    }
 }
