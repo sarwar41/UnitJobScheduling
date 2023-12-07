@@ -1,3 +1,4 @@
+package src;
 import java.awt.Color;
 //import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -20,18 +21,19 @@ public class UserProfile extends JFrame implements ActionListener {
 
 	private JPanel panel;
 	private JLabel nameLabel, emailLabel;
-	JTextField nameTextField;
-	JTextField emailTextField;
-	JButton updateButton;
-	JButton backButton;
-	JButton btnUpdatePassword;
-	JPasswordField oldPasstextField, newPasstextField;
-	 String user_id;
-	String user_pass;
-	public DataAccess db;
+	public JTextField nameTextField;
+	public JTextField emailTextField;
+	public JButton updateButton;
+	public JButton backButton;
+	public JButton btnUpdatePassword;
+	public JPasswordField oldPasstextField, newPasstextField;
+	public String user_id;
+	public String user_pass;
+	public DataAccess api;
 	public Home home;
-	public String rsp = null; 
-	UserProfile() {
+	public String rsp = null;
+	public UserProfile() {
+		
 		Utils utils = new Utils();
 		try {
 			String resp = utils.loadUserloggedInData();
@@ -119,55 +121,59 @@ public class UserProfile extends JFrame implements ActionListener {
 	//
 	void loadProfile() {
 		try {
-			DataAccess db = new DataAccess();
-			String query = "select user_name, profile_name,user_password from users WHERE user_id = '" + user_id + "' ";
-			ResultSet rs = db.executeQuery(query);
-			if (rs != null) {
-				while (rs.next()) {
-					
-					user_pass = rs.getString("user_password");
-					nameTextField.setText(rs.getString("profile_name"));
-					emailTextField.setText(rs.getString("user_name"));
-					rsp = "Load Complete";
-				}
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			api = new DataAccess();
+	        String query = "select user_name, profile_name, user_password from users WHERE user_id = '" + user_id + "' ";
+	        ResultSet rs = api.executeQuery(query);
+	        if (rs != null) {
+	            while (rs.next()) {
+	                user_pass = rs.getString("user_password");
+	                nameTextField.setText(rs.getString("profile_name"));
+	                emailTextField.setText(rs.getString("user_name"));
+	                rsp = "Load Complete";
+	            }
+	        } else {
+	            // Handle the case where the ResultSet is null (or empty) appropriately
+	            rsp = "No user found";
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();  // Consider logging the exception instead of just printing the stack trace
+	        rsp = "Error loading profile";  // Set an appropriate error message
+	    }
 	}
 	//
 	void updateProfileInfo() {
+		api = new DataAccess();
 		String email = emailTextField.getText();
 		String name = nameTextField.getText();
 
-		DataAccess db = new DataAccess();
+//		DataAccess db = new DataAccess();
 		String updateQuery = "update users set profile_name='" + name + "', user_name='" + email
 				+ "' where user_id=" + user_id;
 
-		int resp = db.executeQueryUpdate(updateQuery);
+		int resp = api.executeQueryUpdate(updateQuery);
 		if (resp > 0) {
 			JOptionPane.showMessageDialog(null, "Details are updated Successfully");
 			loadProfile();
 			rsp =  "Details are updated Successfully";
 		} else {
 			JOptionPane.showMessageDialog(null, "Details are not updated");
-//			rsp =  "Details are not updated";
+			rsp =  "Details are not updated";
 		}
 	}
 	//
 	void updateProfilePassword() {
+		api = new DataAccess();
 		String old_pass = String.valueOf(oldPasstextField.getPassword());
 		String new_pass = String.valueOf(newPasstextField.getPassword());
 
-		DataAccess db = new DataAccess();
+//		DataAccess db = new DataAccess();
 		if (!new_pass.isEmpty() && !old_pass.isEmpty()) {
-			if (db.passwordHashing(old_pass).equals(user_pass)) {
+			if (api.passwordHashing(old_pass).equals(user_pass)) {
 
-				String updateQuery = "UPDATE users SET " + "user_password='" + db.passwordHashing(new_pass) + "' "
+				String updateQuery = "UPDATE users SET " + "user_password='" + api.passwordHashing(new_pass) + "' "
 						+ "WHERE user_id=" + user_id;
 
-				int resp = db.executeQueryUpdate(updateQuery);
+				int resp = api.executeQueryUpdate(updateQuery);
 				if (resp > 0) {
 					JOptionPane.showMessageDialog(null, "New Password has updated succesfully.");
 					rsp =  "New Password has updated succesfully.";

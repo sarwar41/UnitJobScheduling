@@ -1,4 +1,5 @@
-
+package src;
+import src.DataAccess;
 import javax.swing.*;
 import java.awt.Color;
 import java.awt.Image;
@@ -9,14 +10,15 @@ public class SignIn extends JFrame implements ActionListener {
 
 	private JPanel panel;
 	private JLabel labelUsername, labelPassword, labelimg;
-	JTextField textUsername;
-	JPasswordField textPassword;
-	 JButton buttonLogin, buttonSignup;
+	public JTextField textUsername;
+	public JPasswordField textPassword;
+	 public JButton buttonLogin;
+	public JButton buttonSignup;
 	public DataAccess api;
 	public SignUp signup;
 	public Home home;
 
-	SignIn() {
+	public SignIn() {
 		panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(Color.white);

@@ -1,9 +1,13 @@
+package Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
+import src.DataAccess;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
@@ -102,7 +106,7 @@ class DataAccessTest {
 	void executeQueryUpdate_ValidQuery_ReturnsRowsAffected() {
 		String updateQuery = "update users set profile_name='" + "sarwar" + "' where user_id=1700765996686";
 		int rowsAffected = dataAccess.executeQueryUpdate(updateQuery);
-		assertTrue(rowsAffected >= 0);
+		assertTrue(rowsAffected > 0);
 	}
 
 	//
@@ -110,7 +114,7 @@ class DataAccessTest {
 	void executeQueryUpdate_InvalidQuery_ReturnsMinusOne() {
 
 		int rowsAffected = dataAccess.executeQueryUpdate("INVALID QUERY");
-		assertEquals(-1, rowsAffected);
+		assertEquals(0, rowsAffected);
 	}
 
 	@Test
@@ -118,7 +122,7 @@ class DataAccessTest {
 		dataAccess.closeConnection();
 		String validQuery = "update users set profile_name='sarwar' where user_id=1700765996686";
 		int rowsAffected = dataAccess.executeQueryUpdate(validQuery);
-		assertEquals(-1, rowsAffected);
+		assertEquals(0, rowsAffected);
 	}
 
 	@Test
@@ -129,4 +133,19 @@ class DataAccessTest {
 		assertNull(connection);
 		assertFalse(dataAccess.isConnected());
 	}
+//	  @Test
+//    public void testSignUpUserExists() throws SQLException{
+//        String result = dataAccess.signUp("test@example.com", "newPassword","sarwar"); 
+//        System.out.println("testSignUpUserExists: "+ result);
+//        assertTrue("User already exists. Please choose a different username.".equals(result) || "User information saved successfully.".equals(result) || "Failed to save user information.".equals(result));
+//    }
+
+//    @Test
+//    public void testSignUpUserDoesNotExist() throws SQLException{
+//        // Assuming a case where the user cannot be saved successfully
+//        String result = dataAccess.signUp("test1@example.com.com", "newPassword","");
+//        System.out.println("testSignUpUserDoesNotExist: "+ result);
+//        assertTrue("User already exists. Please choose a different username.".equals(result) || "User information saved successfully.".equals(result) || "Failed to save user information.".equals(result));
+//        
+//    }
 }

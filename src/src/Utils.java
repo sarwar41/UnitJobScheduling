@@ -1,3 +1,4 @@
+package src;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Properties;
@@ -10,12 +11,12 @@ import java.io.OutputStream;
 
 public class Utils {
 
-	Utils() {
+	public Utils() {
 
 	}
 
 	// email check
-	public static boolean isEmailValid(String email) {
+	public boolean isEmailValid(String email) {
 
 		String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 		Pattern pattern = Pattern.compile(EMAIL_REGEX);
