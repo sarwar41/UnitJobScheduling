@@ -1,4 +1,4 @@
-package Test;
+
 
 import org.junit.Before;
 import org.junit.Test;
@@ -6,9 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-import src.DataAccess;
-import src.Home;
-import src.Utils;
 import java.awt.event.ActionEvent;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

@@ -1,4 +1,4 @@
-package Test;
+
 
 //import static org.junit.Assert.assertFalse;
 //import static org.junit.Assert.assertNotNull;
@@ -29,10 +29,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import src.DataAccess;
-import src.SignIn;
-
 import java.awt.event.ActionEvent;
 
 @RunWith(MockitoJUnitRunner.class)

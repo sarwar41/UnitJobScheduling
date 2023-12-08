@@ -1,14 +1,10 @@
-package Test;
+
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import src.SignUp;
-import src.Utils;
 import static org.junit.Assert.*;
 import java.awt.event.ActionEvent;
-import src.DataAccess;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SignUpTest {

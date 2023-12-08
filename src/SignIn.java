@@ -1,4 +1,4 @@
-package src;
+
 
 import javax.swing.*;
 import java.awt.Color;
@@ -73,6 +73,7 @@ public class SignIn extends JFrame implements ActionListener {
 		if (ae.getSource() == buttonLogin) {
 
 			String username = textUsername.getText();
+			@SuppressWarnings("deprecation")
 			String password = textPassword.getText();
 
 			Utils utils = new Utils();

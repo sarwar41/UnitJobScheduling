@@ -1,4 +1,4 @@
-package src;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -28,6 +28,7 @@ import javax.swing.event.ListSelectionListener;
 
 public class Home extends JFrame implements ActionListener {
 
+	private static final long serialVersionUID = 1L;
 	public JButton addJob;
 	public JButton updateJob;
 	public JButton deleteJob;
@@ -39,7 +40,7 @@ public class Home extends JFrame implements ActionListener {
 	public JLabel taskNameLabel, taskTypeLabel, taskDescLabel, taskStartLabel, taskEndLabel, status, priority,
 			lblScheduledBy;
 	public JTextField taskNameField, taskTypeField, taskStartField, taskEndField;
-	public JComboBox statusDropdown, priorityDropdown, scheduleDropdown;
+	public JComboBox<?> statusDropdown, priorityDropdown, scheduleDropdown;
 	public JTextArea taskDescField;
 	public int sel_task_id;
 	public String user_id;
@@ -88,7 +89,7 @@ public class Home extends JFrame implements ActionListener {
 		getContentPane().add(lblScheduledBy);
 		//
 		String scheduleList[] = { "Priority", "Deadline", "Both" };
-		scheduleDropdown = new JComboBox(scheduleList);
+		scheduleDropdown = new JComboBox<Object>(scheduleList);
 		scheduleDropdown.setBounds(113, 55, 180, 40);
 		getContentPane().add(scheduleDropdown);
 		//
@@ -110,6 +111,8 @@ public class Home extends JFrame implements ActionListener {
 		DataAccess data = new DataAccess();
 		tableModel = new DefaultTableModel(data.scheduleTasks(data.getAllTasks(user_id), "Priority"), columns);
 		table = new JTable(tableModel) {
+			private static final long serialVersionUID = 1L;
+
 			public boolean isCellEditable(int row, int column) {
 				if (column == 0)
 					return true;
@@ -185,7 +188,7 @@ public class Home extends JFrame implements ActionListener {
 		getContentPane().add(status);
 
 		String statusList[] = { "Choose Status", "To-Do", "In Progress", "Finished" };
-		statusDropdown = new JComboBox(statusList);
+		statusDropdown = new JComboBox<Object>(statusList);
 		statusDropdown.setBounds(537, 294, 180, 40);
 		getContentPane().add(statusDropdown);
 
@@ -194,7 +197,7 @@ public class Home extends JFrame implements ActionListener {
 		getContentPane().add(priority);
 
 		String priorityList[] = { "Low", "Medium", "High" };
-		priorityDropdown = new JComboBox(priorityList);
+		priorityDropdown = new JComboBox<Object>(priorityList);
 		priorityDropdown.setBounds(764, 294, 180, 40);
 		getContentPane().add(priorityDropdown);
 
