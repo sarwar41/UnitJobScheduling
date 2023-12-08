@@ -14,8 +14,6 @@ public class SignUp extends JFrame implements ActionListener {
 	public JButton buttonSignup;
 	public JButton buttonCancel;
 	public JTextField profileNameTextField;
-	public DataAccess api;
-	public Utils utils;
 	public SignIn signIn;
 	public String resp = null;
 
@@ -110,19 +108,17 @@ public class SignUp extends JFrame implements ActionListener {
 		} else if (password.isEmpty()) {
 			showMessage("Please enter your password.");
 		} else {
-			utils = new Utils();
-			boolean emailVerified = utils.isEmailValid(username);
+			boolean emailVerified = Utils.isEmailValid(username);
 			if (!emailVerified) {
 				showMessage("Your provided email is not a valid email. Please provide a valid email.");
 				return;
 			}
-			api = new DataAccess();
+			DataAccess api = new DataAccess();
 			resp = api.signUp(username, password, profileName);
-
 			showMessage(resp);
 		}
 	}
-
+	//
 	void showMessage(String message) {
 		JOptionPane.showMessageDialog(null, message, "Message", JOptionPane.INFORMATION_MESSAGE);
 	}

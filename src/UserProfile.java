@@ -1,5 +1,4 @@
 
-
 import java.awt.Color;
 //import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -30,21 +29,13 @@ public class UserProfile extends JFrame implements ActionListener {
 	public JPasswordField oldPasstextField, newPasstextField;
 	public String user_id;
 	public String user_pass;
-	public DataAccess api;
 	public Home home;
 	public String rsp = null;
 	public String respN = null;
 
 	public UserProfile() {
 
-//		Utils utils = new Utils();
-//		try {
-//			String resp = utils.loadUserloggedInData();
-//			user_id = resp;
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			// Handle the exception as needed
-//		}
+		user_id = Utils.loadUserloggedInData();
 
 		panel = new JPanel();
 		panel.setLayout(null);
@@ -124,10 +115,10 @@ public class UserProfile extends JFrame implements ActionListener {
 	//
 	public void loadProfile() {
 		try {
-			api = new DataAccess();
+			DataAccess api = new DataAccess();
 			String query = "select user_name, profile_name, user_password from users WHERE user_id = '" + user_id
 					+ "' ";
-			ResultSet rs = api.executeQuery(query);
+			ResultSet rs = api.queryExecute(query);
 			if (rs.next()) {
 				user_pass = rs.getString("user_password");
 				nameTextField.setText(rs.getString("profile_name"));
@@ -144,59 +135,67 @@ public class UserProfile extends JFrame implements ActionListener {
 
 	//
 	public void updateProfileInfo() {
-		api = new DataAccess();
-		String email = emailTextField.getText();
-		String name = nameTextField.getText();
+		try {
+			DataAccess api = new DataAccess();
+			String email = emailTextField.getText();
+			String name = nameTextField.getText();
+			String updateQuery = "update users set profile_name='" + name + "', user_name='" + email
+					+ "' where user_id=" + user_id;
 
-//		DataAccess db = new DataAccess();
-		String updateQuery = "update users set profile_name='" + name + "', user_name='" + email + "' where user_id="
-				+ user_id;
+			boolean resp = api.queryUpdate(updateQuery);
+			if (resp) {
+				respN = "Details are updated Successfully";
+				JOptionPane.showMessageDialog(null, respN);
+				loadProfile();
 
-		int resp = api.executeQueryUpdate(updateQuery);
-		if (resp > 0) {
-			respN = "Details are updated Successfully";
-			JOptionPane.showMessageDialog(null, respN);
-			loadProfile();
+			} else {
+				respN = "Details are not updated";
+				JOptionPane.showMessageDialog(null, respN);
 
-		} else {
-			respN = "Details are not updated";
-			JOptionPane.showMessageDialog(null, respN);
-
+			}
+		} catch (Exception e) {
+//	        e.printStackTrace();  // Consider logging the exception instead of just printing the stack trace
+			rsp = "Details are not updated"; // Set an appropriate error message
 		}
 	}
 
 	//
 	public void updateProfilePassword() {
-		api = new DataAccess();
-		String old_pass = String.valueOf(oldPasstextField.getPassword());
-		String new_pass = String.valueOf(newPasstextField.getPassword());
+		try {
+			DataAccess api = new DataAccess();
+			
+			String old_pass = String.valueOf(oldPasstextField.getPassword());
+			String new_pass = String.valueOf(newPasstextField.getPassword());
 
-//		DataAccess db = new DataAccess();
-		if (!new_pass.isEmpty() && !old_pass.isEmpty()) {
-			if (api.passwordHashing(old_pass).equals(user_pass)) {
+			if (!new_pass.isEmpty() && !old_pass.isEmpty()) {
+				if (Utils.passwordHashing(old_pass).equals(user_pass)) {
 
-				String updateQuery = "UPDATE users SET " + "user_password='" + api.passwordHashing(new_pass) + "' "
-						+ "WHERE user_id=" + user_id;
+					String updateQuery = "UPDATE users SET " + "user_password='" + Utils.passwordHashing(new_pass) + "' "
+							+ "WHERE user_id=" + user_id;
 
-				int resp = api.executeQueryUpdate(updateQuery);
-				if (resp > 0) {
-					respN = "New Password has updated succesfully.";
-					JOptionPane.showMessageDialog(null, respN);
+					boolean resp = api.queryUpdate(updateQuery);
+					if (resp){
+						respN = "New Password has updated succesfully.";
+						JOptionPane.showMessageDialog(null, respN);
+						loadProfile();
+					} else {
+						respN = "New Password has not updated.";
+						JOptionPane.showMessageDialog(null, respN);
 
-					loadProfile();
+					}
 				} else {
-					respN = "New Password has not updated.";
+					respN = "Old password doesn't match.";
 					JOptionPane.showMessageDialog(null, respN);
-
 				}
 			} else {
-				respN = "Old password doesn't match.";
+				respN = "Please enter your old and new password";
 				JOptionPane.showMessageDialog(null, respN);
 			}
-		} else {
-			respN = "Please enter your old and new password";
-			JOptionPane.showMessageDialog(null, respN);
+		} catch (Exception e) {
+//	        e.printStackTrace();  // Consider logging the exception instead of just printing the stack trace
+//			rsp = "Details are not updated"; // Set an appropriate error message
 		}
+		
 	}
 
 	//

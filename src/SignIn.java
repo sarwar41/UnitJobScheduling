@@ -84,23 +84,24 @@ public class SignIn extends JFrame implements ActionListener {
 						JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			api = new DataAccess();
-			String resp = api.isUserValid(username, password);
-			if (!resp.isEmpty()) {
-
-				try {
-					utils.saveUserloggedInData(resp);
-				} catch (IOException e) {
-					e.printStackTrace();
-					// Handle the exception as needed
+			try {
+				api = new DataAccess();
+				String resp = api.isUserValid(username, password);
+				if (!resp.isEmpty()) {
+					try {
+						utils.saveUserloggedInData(resp);
+					} catch (IOException e) {
+						e.printStackTrace();
+						// Handle the exception as needed
+					}
+					home = new Home();
+					home.setVisible(true);
+					SignIn.this.setVisible(false);
+				} else {
+					JOptionPane.showMessageDialog(null, "You've entered wrong email and password", "Message",
+							JOptionPane.INFORMATION_MESSAGE);
 				}
-
-				home = new Home();
-				home.setVisible(true);
-				SignIn.this.setVisible(false);
-			} else {
-				JOptionPane.showMessageDialog(null, "You've entered wrong email and password", "Message",
-						JOptionPane.INFORMATION_MESSAGE);
+			}catch(Exception ex){
 			}
 
 		}

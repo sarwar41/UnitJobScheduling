@@ -45,18 +45,11 @@ public class Home extends JFrame implements ActionListener {
 	public String user_id;
 	public String rsp = null;
 	public UserProfile  userProfile;
+	
 	public Home() {
-		Utils utils = new Utils();
-		String resp = null;
-		try {
-			resp = utils.loadUserloggedInData();
-		} catch (IOException e) {
-//			e.printStackTrace();
-			resp = null;
-			// Handle the exception as needed
-		}
-
-		user_id = resp;
+		//load user_id
+		user_id = Utils.loadUserloggedInData();
+		//
 		panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(Color.white);
@@ -111,31 +104,14 @@ public class Home extends JFrame implements ActionListener {
 
 		try {
 		    DataAccess data = new DataAccess();
+		    tableModel = new DefaultTableModel(data.scheduleTasks(data.getAllJobs(user_id), "Priority"), columns);
+	        table = new JTable(tableModel) {
+	            private static final long serialVersionUID = 1L;
 
-		    if (data.isConnected()) { // Ensure that the database connection is established
-		        tableModel = new DefaultTableModel(data.scheduleTasks(data.getAllTasks(user_id), "Priority"), columns);
-		        table = new JTable(tableModel) {
-		            private static final long serialVersionUID = 1L;
-
-		            public boolean isCellEditable(int row, int column) {
-		                return column == 0;
-		            }
-		        };
-
-		        // Set a default cell renderer for column 0 to avoid NullPointerException
-//		        table.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {
-//		            @Override
-//		            public Component getTableCellRendererComponent(JTable table, Object value,
-//		                                                           boolean isSelected, boolean hasFocus,
-//		                                                           int row, int column) {
-//		                return new JLabel(""); // Empty JLabel to hide the cell content
-//		            }
-//		        });
-
-		        // ... (rest of your code)
-		    } else {
-		        System.err.println("Database connection failed.");
-		    }
+	            public boolean isCellEditable(int row, int column) {
+	                return column == 0;
+	            }
+	        };
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
@@ -285,7 +261,7 @@ public class Home extends JFrame implements ActionListener {
 			System.out.println("scheduleDropdown performed" + (String) scheduleDropdown.getSelectedItem());
 			// Update the table model with the new data
 			tableModel.setDataVector(
-					data.scheduleTasks(data.getAllTasks(user_id), (String) scheduleDropdown.getSelectedItem()),
+					data.scheduleTasks(data.getAllJobs(user_id), (String) scheduleDropdown.getSelectedItem()),
 					columns);
 			// Get the TableColumnModel
 			TableColumnModel columnModel = table.getColumnModel();
@@ -308,25 +284,19 @@ public class Home extends JFrame implements ActionListener {
 		String status = (String) statusDropdown.getSelectedItem();
 		String priority = (String) priorityDropdown.getSelectedItem();
 		String description = taskDescField.getText();
-//		String reminderChoice = "";
-//		if (yesRadioButton.isSelected()) {
-//			reminderChoice = "Yes";
-//		} else if (noRadioButton.isSelected()) {
-//			reminderChoice = "No";
-//		}
 
 		try {
 			if(user_id.isEmpty()) {
 				rsp = "please login to add data";
 				return;
 			}
-			DataAccess db = new DataAccess();
+			DataAccess api = new DataAccess();
 			String insertQuery = "INSERT INTO tasks (name, type, startdate, enddate, status, priority, description, user_id) "
 					+ "VALUES ('" + name + "', '" + type + "', '" + startdate + "', '" + enddate + "', '" + status
 					+ "', '" + priority + "', '" + description + "','" + user_id + "')";
 
-			int resp = db.executeQueryUpdate(insertQuery);
-			if (resp > 0) {
+			boolean resp = api.queryUpdate(insertQuery);
+			if (resp) {
 				rsp = "Details are added Successfully";
 				JOptionPane.showMessageDialog(null,rsp );
 				refreshTable();
@@ -349,25 +319,16 @@ public class Home extends JFrame implements ActionListener {
 		String status = (String) statusDropdown.getSelectedItem();
 		String priority = (String) priorityDropdown.getSelectedItem();
 		String description = taskDescField.getText();
-//		String reminderChoice = "";
-//		if (yesRadioButton.isSelected()) {
-//			reminderChoice = "Yes";
-//		} else if (noRadioButton.isSelected()) {
-//			reminderChoice = "No";
-//		}
 
 		try {
 			if (sel_task_id > 0) {
-				DataAccess db = new DataAccess();
+				DataAccess api = new DataAccess();
 				String updateQuery = "UPDATE tasks SET " + "name='" + name + "', " + "type='" + type + "', "
 						+ "startdate='" + startdate + "', " + "enddate='" + enddate + "', " + "status='" + status
 						+ "', " + "priority='" + priority + "', " + "description='" + description + "' "
 						+ "WHERE task_id=" + sel_task_id;
-
-				int resp = db.executeQueryUpdate(updateQuery);
-				System.out.println("respresprespresp upd::  "+resp);
-				if (resp > 0) {
-					
+				boolean resp = api.queryUpdate(updateQuery);
+				if (resp) {
 					rsp = "Details are updated Successfully";
 					JOptionPane.showMessageDialog(null,rsp );
 					refreshTable();
@@ -375,6 +336,7 @@ public class Home extends JFrame implements ActionListener {
 					rsp = "Details are not updated";
 					JOptionPane.showMessageDialog(null, rsp);
 				}
+				
 			} else {
 				rsp = "Please select a task first to update";
 				JOptionPane.showMessageDialog(null, rsp);
@@ -393,13 +355,11 @@ public class Home extends JFrame implements ActionListener {
 			int confirmResult = JOptionPane.showConfirmDialog(null,
 					"Are you sure you want to delete this selected Task ?", "Confirmation", JOptionPane.YES_NO_OPTION);
 			if (confirmResult == JOptionPane.YES_OPTION) {
-				DataAccess db = new DataAccess();
+				DataAccess api = new DataAccess();
 				String deleteQuery = "DELETE FROM tasks WHERE task_id = " + sel_task_id;
 
-				int resp = db.executeQueryUpdate(deleteQuery);
-
-				System.out.println("respresprespresp delete::  "+resp);
-				if (resp > 0) {
+				boolean resp = api.queryUpdate(deleteQuery);
+				if (resp) {
 					rsp = "Task has deleted Successfully";
 					JOptionPane.showMessageDialog(null,rsp );
 					refreshTable();
