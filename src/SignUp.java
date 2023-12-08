@@ -42,13 +42,18 @@ public class SignUp extends JFrame implements ActionListener {
 
 //		panel.add(buttonCancel);
 //		panel.add(buttonSignup);
-		getContentPane().add(panel);
+		
 
-		labelimg = new JLabel("");
-		Image img = new ImageIcon(getClass().getResource("/applogin.png")).getImage();
-		labelimg.setIcon(new ImageIcon(img));
-		labelimg.setBounds(60, 136, 150, 150);
-		panel.add(labelimg);
+//		labelimg = new JLabel("");
+//		Image img = new ImageIcon(getClass().getResource("/applogin.png")).getImage();
+//		if (img != null) {
+//		    labelimg.setIcon(new ImageIcon(img));
+//		    labelimg.setBounds(60, 136, 150, 150);
+//			panel.add(labelimg);
+//		} else {
+//		    System.err.println("Image not found!");
+//		}
+		
 		// back to sign up button
 		buttonCancel = new JButton("Already Have an account? SignIn");
 		buttonCancel.setBounds(207, 322, 322, 30);
@@ -69,6 +74,8 @@ public class SignUp extends JFrame implements ActionListener {
 		panel.add(lblUserName);
 		buttonSignup.addActionListener(this);
 
+		getContentPane().add(panel);
+		
 		setSize(700, 600);
 		setLocationRelativeTo(null);
 		setTitle("User Signup");

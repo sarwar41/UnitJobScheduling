@@ -260,3 +260,221 @@ class SortComparator implements Comparator<Vector<String>> {
 
 	}
 }
+//
+//
+//
+//import java.sql.*;
+//import java.text.ParseException;
+//import java.text.SimpleDateFormat;
+//import java.util.Vector;
+//import java.security.MessageDigest;
+//import java.util.Collections;
+//import java.util.Comparator;
+//import java.util.List;
+//import java.util.Date;
+//
+//public class DataAccess {
+//
+//    private static final String DB_URL = "jdbc:mysql://localhost:3306/unitjobscheduling";
+//    private static final String DB_USER = "root";
+//    private static final String DB_PASSWORD = "Asd%049724";
+//    private Connection con;
+//    private Statement stm;
+//
+//    public DataAccess() {
+//        initializeDatabaseConnection();
+//    }
+//
+//    public void initializeDatabaseConnection() {
+//        try {
+//            Class.forName("com.mysql.cj.jdbc.Driver");
+//            this.con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+//            this.stm = this.con.createStatement();
+//        } catch (Exception ex) {
+//            handleException(ex);
+//        }
+//    }
+//
+//    public Connection getConnection() {
+//        return this.con;
+//    }
+//
+//    public boolean isConnected() {
+//        return this.con != null;
+//    }
+//
+//    public void closeConnection() {
+//        try {
+//            if (this.stm != null) {
+//                this.stm.close();
+//            }
+//            if (this.con != null) {
+//                this.con.close();
+//            }
+//        } catch (SQLException ex) {
+//            handleException(ex);
+//        } finally {
+//            this.con = null;
+//            this.stm = null;
+//        }
+//    }
+//
+//    public ResultSet executeQuery(String sql) {
+//        try {
+//            return this.con != null ? this.stm.executeQuery(sql) : null;
+//        } catch (SQLException ex) {
+//            handleException(ex);
+//            return null;
+//        }
+//    }
+//
+//    public int executeQueryUpdate(String sql) {
+//        try {
+//            return this.con != null ? this.stm.executeUpdate(sql) : 0;
+//        } catch (SQLException ex) {
+//            handleException(ex);
+//            return 0;
+//        }
+//    }
+//
+//    public String isUserValid(String username, String password) {
+//        try {
+//            password = passwordHashing(password);
+//            String sql = "SELECT user_id FROM users WHERE user_name=? AND user_password=?";
+//            try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+//                pstmt.setString(1, username);
+//                pstmt.setString(2, password);
+//                ResultSet rs = pstmt.executeQuery();
+//                return rs.next() ? rs.getString("user_id") : "";
+//            }
+//        } catch (SQLException ex) {
+//            handleException(ex);
+//            return "";
+//        }
+//    }
+//
+//    public String signUp(String username, String password, String name) {
+//        try {
+//            String checkUserQuery = "SELECT * FROM users WHERE user_name = ?";
+//            try (PreparedStatement pstmt = con.prepareStatement(checkUserQuery)) {
+//                pstmt.setString(1, username);
+//                ResultSet rs = pstmt.executeQuery();
+//                if (rs.next()) {
+//                    return "User already exists. Please choose a different username.";
+//                } else {
+//                    String sql = "INSERT INTO users (user_id, user_name, user_password, user_type, profile_name) "
+//                            + "VALUES (?, ?, ?, ?, ?)";
+//                    try (PreparedStatement insertStmt = con.prepareStatement(sql)) {
+//                        insertStmt.setString(1, Long.toString(System.currentTimeMillis()));
+//                        insertStmt.setString(2, username);
+//                        insertStmt.setString(3, passwordHashing(password));
+//                        insertStmt.setString(4, "user");
+//                        insertStmt.setString(5, name);
+//
+//                        if (insertStmt.executeUpdate() > 0) {
+//                            return "User information saved successfully.";
+//                        }
+//                        return "Failed to save user information.";
+//                    }
+//                }
+//            }
+//        } catch (SQLException e) {
+//            handleException(e);
+//            return "";
+//        }
+//    }
+//
+//    public String passwordHashing(String password) {
+//        try {
+//            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+//            byte[] hashedBytes = digest.digest(password.getBytes());
+//            StringBuilder hexString = new StringBuilder();
+//            for (byte b : hashedBytes) {
+//                String hex = Integer.toHexString(0xff & b);
+//                hexString.append(hex.length() == 1 ? '0' : "").append(hex);
+//            }
+//            return hexString.toString();
+//        } catch (Exception e) {
+//            handleException(e);
+//            return "";
+//        }
+//    }
+//
+//    private Vector<Vector<String>> fetchInfo(String sql, String[] columnNames) {
+//        Vector<Vector<String>> dataList = new Vector<>();
+//        try {
+//            ResultSet rs = executeQuery(sql);
+//            while (rs.next()) {
+//                Vector<String> rowData = new Vector<>();
+//                for (String columnName : columnNames) {
+//                    rowData.add(rs.getString(columnName));
+//                }
+//                dataList.add(rowData);
+//            }
+//            return dataList;
+//        } catch (SQLException ex) {
+//            handleException(ex);
+//            return dataList;
+//        }
+//    }
+//
+//    public Vector<Vector<String>> getAllTasks(String user_id) {
+//        String sql = "SELECT task_id, name, type, description, startdate, endDate, status, priority FROM tasks WHERE user_id = ?";
+//        String[] columnNames = { "task_id", "name", "type", "description", "status", "startdate", "endDate", "priority" };
+//        return fetchInfo(sql, columnNames);
+//    }
+//
+//    public Vector<Vector<String>> scheduleTasks(Vector<Vector<String>> dataList, String sort_by) {
+//        Collections.sort(dataList, new SortComparator(sort_by));
+//        return dataList;
+//    }
+//
+//    private void handleException(Exception ex) {
+//        // Log or handle the exception as needed
+//        ex.printStackTrace();
+//    }
+//}
+//
+//class SortComparator implements Comparator<Vector<String>> {
+//
+//    private static final List<String> PRIORITY_ORDER = List.of("High", "Medium", "Low");
+//    private String sort_by;
+//
+//    public SortComparator(String sort_by) {
+//        this.sort_by = sort_by;
+//    }
+//
+//    @Override
+//    public int compare(Vector<String> task1, Vector<String> task2) {
+//        if (this.sort_by.equals("Priority")) {
+//            String priority1 = task1.get(7);
+//            String priority2 = task2.get(7);
+//            return Integer.compare(PRIORITY_ORDER.indexOf(priority1), PRIORITY_ORDER.indexOf(priority2));
+//        } else if (this.sort_by.equals("Deadline")) {
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+//            try {
+//                Date date1 = dateFormat.parse(task1.get(6));
+//                Date date2 = dateFormat.parse(task2.get(6));
+//                return date1.compareTo(date2);
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//        } else if (this.sort_by.equals("Both")) {
+//            String priority1 = task1.get(7);
+//            String priority2 = task2.get(7);
+//            int priorityComparison = Integer.compare(PRIORITY_ORDER.indexOf(priority1), PRIORITY_ORDER.indexOf(priority2));
+//            if (priorityComparison != 0) {
+//                return priorityComparison;
+//            }
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+//            try {
+//                Date date1 = dateFormat.parse(task1.get(6));
+//                Date date2 = dateFormat.parse(task2.get(6));
+//                return date1.compareTo(date2);
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return 0;
+//    }
+//}

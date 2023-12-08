@@ -37,14 +37,14 @@ public class UserProfile extends JFrame implements ActionListener {
 
 	public UserProfile() {
 
-		Utils utils = new Utils();
-		try {
-			String resp = utils.loadUserloggedInData();
-			user_id = resp;
-		} catch (IOException e) {
-			e.printStackTrace();
-			// Handle the exception as needed
-		}
+//		Utils utils = new Utils();
+//		try {
+//			String resp = utils.loadUserloggedInData();
+//			user_id = resp;
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			// Handle the exception as needed
+//		}
 
 		panel = new JPanel();
 		panel.setLayout(null);

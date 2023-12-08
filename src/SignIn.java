@@ -42,11 +42,11 @@ public class SignIn extends JFrame implements ActionListener {
 //		panel.add(buttonSignup);
 //		panel.add(buttonLogin);
 
-		labelimg = new JLabel("");
-		Image img = new ImageIcon(getClass().getResource("/applogin.png")).getImage();
-		labelimg.setIcon(new ImageIcon(img));
-		labelimg.setBounds(60, 136, 150, 150);
-		panel.add(labelimg);
+//		labelimg = new JLabel("");
+//		Image img = new ImageIcon(getClass().getResource("/applogin.png")).getImage();
+//		labelimg.setIcon(new ImageIcon(img));
+//		labelimg.setBounds(60, 136, 150, 150);
+//		panel.add(labelimg);
 
 		// back to sign up button
 		buttonSignup = new JButton("Don't have an account? Create a New Account.");

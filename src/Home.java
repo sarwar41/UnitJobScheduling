@@ -28,7 +28,6 @@ import javax.swing.event.ListSelectionListener;
 
 public class Home extends JFrame implements ActionListener {
 
-	private static final long serialVersionUID = 1L;
 	public JButton addJob;
 	public JButton updateJob;
 	public JButton deleteJob;
@@ -40,7 +39,7 @@ public class Home extends JFrame implements ActionListener {
 	public JLabel taskNameLabel, taskTypeLabel, taskDescLabel, taskStartLabel, taskEndLabel, status, priority,
 			lblScheduledBy;
 	public JTextField taskNameField, taskTypeField, taskStartField, taskEndField;
-	public JComboBox<?> statusDropdown, priorityDropdown, scheduleDropdown;
+	public JComboBox statusDropdown, priorityDropdown, scheduleDropdown;
 	public JTextArea taskDescField;
 	public int sel_task_id;
 	public String user_id;
@@ -53,6 +52,7 @@ public class Home extends JFrame implements ActionListener {
 			resp = utils.loadUserloggedInData();
 		} catch (IOException e) {
 //			e.printStackTrace();
+			resp = null;
 			// Handle the exception as needed
 		}
 
@@ -95,9 +95,9 @@ public class Home extends JFrame implements ActionListener {
 		//
 		getContentPane().add(panel);
 
-//		table = new JTable();
-//		table.setBounds(16, 61, 1, 1);
-//		table.setSize(getPreferredSize());
+		table = new JTable();
+		table.setBounds(16, 61, 1, 1);
+		table.setSize(getPreferredSize());
 		//
 		Vector<String> columns = new Vector<String>();
 		columns.add("Task id");
@@ -108,32 +108,37 @@ public class Home extends JFrame implements ActionListener {
 		columns.add("Start Date");
 		columns.add("End Date");
 		columns.add("Priority");
-		DataAccess data = new DataAccess();
-		tableModel = new DefaultTableModel(data.scheduleTasks(data.getAllTasks(user_id), "Priority"), columns);
-		table = new JTable(tableModel) {
-			private static final long serialVersionUID = 1L;
 
-			public boolean isCellEditable(int row, int column) {
-				if (column == 0)
-					return true;
-				else
-					return false;
-			}
-//			@Override
-//            public TableCellRenderer getCellRenderer(int row, int column) {
-//                if (column == 0) {
-//                    return new DefaultTableCellRenderer() {
-//                        @Override
-//                        public Component getTableCellRendererComponent(JTable table, Object value,
-//                                                                       boolean isSelected, boolean hasFocus,
-//                                                                       int row, int column) {
-//                            return new JLabel(""); // Empty JLabel to hide the cell content
-//                        }
-//                    };
-//                }
-//                return super.getCellRenderer(row, column);
-//            }
-		};
+		try {
+		    DataAccess data = new DataAccess();
+
+		    if (data.isConnected()) { // Ensure that the database connection is established
+		        tableModel = new DefaultTableModel(data.scheduleTasks(data.getAllTasks(user_id), "Priority"), columns);
+		        table = new JTable(tableModel) {
+		            private static final long serialVersionUID = 1L;
+
+		            public boolean isCellEditable(int row, int column) {
+		                return column == 0;
+		            }
+		        };
+
+		        // Set a default cell renderer for column 0 to avoid NullPointerException
+//		        table.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {
+//		            @Override
+//		            public Component getTableCellRendererComponent(JTable table, Object value,
+//		                                                           boolean isSelected, boolean hasFocus,
+//		                                                           int row, int column) {
+//		                return new JLabel(""); // Empty JLabel to hide the cell content
+//		            }
+//		        });
+
+		        // ... (rest of your code)
+		    } else {
+		        System.err.println("Database connection failed.");
+		    }
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
 		// Get the TableColumnModel
 		TableColumnModel columnModel = table.getColumnModel();
 		// Hide the "Task id" column
