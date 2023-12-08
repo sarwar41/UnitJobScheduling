@@ -19,7 +19,5 @@ public class Main {
 			SignIn si = new SignIn();
 			si.setVisible(true);
 		}
-
-	}
-	
+	}	
 }

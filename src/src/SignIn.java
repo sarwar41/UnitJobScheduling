@@ -1,5 +1,5 @@
 package src;
-import src.DataAccess;
+
 import javax.swing.*;
 import java.awt.Color;
 import java.awt.Image;
@@ -12,7 +12,7 @@ public class SignIn extends JFrame implements ActionListener {
 	private JLabel labelUsername, labelPassword, labelimg;
 	public JTextField textUsername;
 	public JPasswordField textPassword;
-	 public JButton buttonLogin;
+	public JButton buttonLogin;
 	public JButton buttonSignup;
 	public DataAccess api;
 	public SignUp signup;
@@ -47,7 +47,7 @@ public class SignIn extends JFrame implements ActionListener {
 		labelimg.setIcon(new ImageIcon(img));
 		labelimg.setBounds(60, 136, 150, 150);
 		panel.add(labelimg);
-		
+
 		// back to sign up button
 		buttonSignup = new JButton("Don't have an account? Create a New Account.");
 		buttonSignup.setBounds(207, 322, 322, 30);
@@ -86,16 +86,16 @@ public class SignIn extends JFrame implements ActionListener {
 			api = new DataAccess();
 			String resp = api.isUserValid(username, password);
 			if (!resp.isEmpty()) {
-				
-				 try {
-					 utils.saveUserloggedInData(resp);
-			        } catch (IOException e) {
-			            e.printStackTrace();
-			            // Handle the exception as needed
-			        }
-				
-				 home = new Home();
-				 home.setVisible(true);
+
+				try {
+					utils.saveUserloggedInData(resp);
+				} catch (IOException e) {
+					e.printStackTrace();
+					// Handle the exception as needed
+				}
+
+				home = new Home();
+				home.setVisible(true);
 				SignIn.this.setVisible(false);
 			} else {
 				JOptionPane.showMessageDialog(null, "You've entered wrong email and password", "Message",

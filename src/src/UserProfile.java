@@ -1,4 +1,5 @@
 package src;
+
 import java.awt.Color;
 //import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -32,16 +33,18 @@ public class UserProfile extends JFrame implements ActionListener {
 	public DataAccess api;
 	public Home home;
 	public String rsp = null;
+	public String respN = null;
+
 	public UserProfile() {
-		
+
 		Utils utils = new Utils();
 		try {
 			String resp = utils.loadUserloggedInData();
 			user_id = resp;
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Handle the exception as needed
-        }
+		} catch (IOException e) {
+			e.printStackTrace();
+			// Handle the exception as needed
+		}
 
 		panel = new JPanel();
 		panel.setLayout(null);
@@ -119,49 +122,51 @@ public class UserProfile extends JFrame implements ActionListener {
 	}
 
 	//
-	void loadProfile() {
+	public void loadProfile() {
 		try {
 			api = new DataAccess();
-	        String query = "select user_name, profile_name, user_password from users WHERE user_id = '" + user_id + "' ";
-	        ResultSet rs = api.executeQuery(query);
-	        if (rs != null) {
-	            while (rs.next()) {
-	                user_pass = rs.getString("user_password");
-	                nameTextField.setText(rs.getString("profile_name"));
-	                emailTextField.setText(rs.getString("user_name"));
-	                rsp = "Load Complete";
-	            }
-	        } else {
-	            // Handle the case where the ResultSet is null (or empty) appropriately
-	            rsp = "No user found";
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();  // Consider logging the exception instead of just printing the stack trace
-	        rsp = "Error loading profile";  // Set an appropriate error message
-	    }
+			String query = "select user_name, profile_name, user_password from users WHERE user_id = '" + user_id
+					+ "' ";
+			ResultSet rs = api.executeQuery(query);
+			if (rs.next()) {
+				user_pass = rs.getString("user_password");
+				nameTextField.setText(rs.getString("profile_name"));
+				emailTextField.setText(rs.getString("user_name"));
+				rsp = "Load Complete";
+			} else {
+				rsp = "No Complete";
+			}
+		} catch (Exception e) {
+//	        e.printStackTrace();  // Consider logging the exception instead of just printing the stack trace
+			rsp = "Error loading profile"; // Set an appropriate error message
+		}
 	}
+
 	//
-	void updateProfileInfo() {
+	public void updateProfileInfo() {
 		api = new DataAccess();
 		String email = emailTextField.getText();
 		String name = nameTextField.getText();
 
 //		DataAccess db = new DataAccess();
-		String updateQuery = "update users set profile_name='" + name + "', user_name='" + email
-				+ "' where user_id=" + user_id;
+		String updateQuery = "update users set profile_name='" + name + "', user_name='" + email + "' where user_id="
+				+ user_id;
 
 		int resp = api.executeQueryUpdate(updateQuery);
 		if (resp > 0) {
-			JOptionPane.showMessageDialog(null, "Details are updated Successfully");
+			respN = "Details are updated Successfully";
+			JOptionPane.showMessageDialog(null, respN);
 			loadProfile();
-			rsp =  "Details are updated Successfully";
+
 		} else {
-			JOptionPane.showMessageDialog(null, "Details are not updated");
-			rsp =  "Details are not updated";
+			respN = "Details are not updated";
+			JOptionPane.showMessageDialog(null, respN);
+
 		}
 	}
+
 	//
-	void updateProfilePassword() {
+	public void updateProfilePassword() {
 		api = new DataAccess();
 		String old_pass = String.valueOf(oldPasstextField.getPassword());
 		String new_pass = String.valueOf(newPasstextField.getPassword());
@@ -175,18 +180,22 @@ public class UserProfile extends JFrame implements ActionListener {
 
 				int resp = api.executeQueryUpdate(updateQuery);
 				if (resp > 0) {
-					JOptionPane.showMessageDialog(null, "New Password has updated succesfully.");
-					rsp =  "New Password has updated succesfully.";
+					respN = "New Password has updated succesfully.";
+					JOptionPane.showMessageDialog(null, respN);
+
 					loadProfile();
 				} else {
-					JOptionPane.showMessageDialog(null, "Password has not updated successfully");
+					respN = "New Password has not updated.";
+					JOptionPane.showMessageDialog(null, respN);
 
 				}
 			} else {
-				JOptionPane.showMessageDialog(null, "Old password doesn't match");
+				respN = "Old password doesn't match.";
+				JOptionPane.showMessageDialog(null, respN);
 			}
 		} else {
-			JOptionPane.showMessageDialog(null, "Please enter your old and new password");
+			respN = "Please enter your old and new password";
+			JOptionPane.showMessageDialog(null, respN);
 		}
 	}
 
@@ -197,7 +206,7 @@ public class UserProfile extends JFrame implements ActionListener {
 			updateProfileInfo();
 		} else if (ae.getSource() == btnUpdatePassword) {
 			updateProfilePassword();
-			
+
 		} else if (ae.getSource() == backButton) {
 			home = new Home();
 			home.setVisible(true);

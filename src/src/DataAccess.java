@@ -95,7 +95,8 @@ public class DataAccess {
 			ResultSet rs = executeQuery(sql);
 			if(rs.next())
 				return rs.getString("user_id");
-			return "";
+			else 
+				return "";
 		} catch (SQLException ex) {
 //			ex.printStackTrace();
 			return "";

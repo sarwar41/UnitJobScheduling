@@ -51,7 +51,7 @@ public class Home extends JFrame implements ActionListener {
 		try {
 			resp = utils.loadUserloggedInData();
 		} catch (IOException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			// Handle the exception as needed
 		}
 

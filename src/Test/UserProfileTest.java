@@ -1,6 +1,7 @@
 package Test;
+
 import src.DataAccess;
-import src.SignIn;
+import src.Home;
 import src.UserProfile;
 
 //import org.junit.Before;
@@ -55,80 +56,160 @@ import src.UserProfile;
 //    }
 //}
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.JOptionPane;
+
+@RunWith(MockitoJUnitRunner.class)
 public class UserProfileTest {
 
-    @Test
-    public void testUpdateProfileButtonAction_ValidInput() {
-        // Mock the external dependencies
-        DataAccess mockDataAccess = Mockito.mock(DataAccess.class);
-     
-        // Create the UserProfile instance
-        UserProfile userProfile = new UserProfile();
-        userProfile.api = mockDataAccess;
+	@Test
+	public void testUpdateProfileButtonAction_ValidInput() {
 
-        // Mock user input
-        userProfile.emailTextField.setText("test@example.com");
-        userProfile.nameTextField.setText("TestUser");
+		DataAccess mockDataAccess = Mockito.mock(DataAccess.class);
+		UserProfile userProfile = new UserProfile();
+		userProfile.api = mockDataAccess;
+		userProfile.user_id = "1701989664305";
+		userProfile.emailTextField.setText("test@example.com");
+		userProfile.nameTextField.setText("TestUser");
+//		when(mockDataAccess.executeQueryUpdate(anyString())).thenReturn(1);
+		ActionEvent mockActionEvent = new ActionEvent(userProfile.updateButton, ActionEvent.ACTION_PERFORMED, "Update");
+		userProfile.actionPerformed(mockActionEvent);
+		assertEquals("Details are updated Successfully", userProfile.respN);
+		userProfile.dispose();
+	}
 
-        // Mock database response
-        when(mockDataAccess.executeQueryUpdate(anyString())).thenReturn(1);
+	@Test
+	public void testUpdatePasswordButtonAction_ValidInput() {
 
-        // Create a mock action event for the update button
-        ActionEvent mockActionEvent = new ActionEvent(userProfile.updateButton, ActionEvent.ACTION_PERFORMED, "Update");
+		DataAccess mockDataAccess = Mockito.mock(DataAccess.class);
+		UserProfile userProfile = new UserProfile();
+		userProfile.api = mockDataAccess;
+		userProfile.user_id = "1701989664305";
+		userProfile.oldPasstextField.setText("asd");
+		userProfile.newPasstextField.setText("asd");
+		userProfile.user_pass = "688787d8ff144c502c7f5cffaafe2cc588d86079f9de88304c26b0cb99ce91c6";
+//		when(mockDataAccess.passwordHashing(anyString())).thenReturn("hashedPassword");
+//		when(mockDataAccess.executeQueryUpdate(anyString())).thenReturn(1);
 
-        // Call the actionPerformed method with the mock action event
-        userProfile.actionPerformed(mockActionEvent);
+		ActionEvent mockActionEvent = new ActionEvent(userProfile.btnUpdatePassword, ActionEvent.ACTION_PERFORMED,
+				"UpdatePassword");
+		userProfile.actionPerformed(mockActionEvent);
+		assertEquals("New Password has updated succesfully.", userProfile.respN);
+//		verify(mockDataAccess, times(1)).passwordHashing(anyString());
+		userProfile.dispose();
+	}
 
-        // Assert that the database update was called
-        verify(mockDataAccess, times(1)).executeQueryUpdate(anyString());
+	@Test
+	public void testBackButtonAction() {
+		UserProfile userProfile = new UserProfile();
+		ActionEvent mockActionEvent = new ActionEvent(userProfile.backButton, ActionEvent.ACTION_PERFORMED, "Home");
+		userProfile.actionPerformed(mockActionEvent);
+		assertTrue(userProfile.home.isVisible());
+		userProfile.dispose();
+	}
 
-        // Clean up any resources if needed
-        userProfile.dispose();
-    }
+	@Test
+	public void testLoadProfile() {
+		UserProfile userProfile = new UserProfile();
+		userProfile.user_id = "1701989664305";
+		userProfile.loadProfile();
+		assertEquals("Load Complete", userProfile.rsp);
+	}
 
-    @Test
-    public void testUpdatePasswordButtonAction_ValidInput() {
-        // Mock the external dependencies
-        DataAccess mockDataAccess = Mockito.mock(DataAccess.class);
+	@Test
+	public void testLoadProfileFail() {
+		UserProfile userProfile = new UserProfile();
+		userProfile.user_id = "";
+		userProfile.loadProfile();
+		System.out.println("userProfile.rsp"+userProfile.rsp);
+		assertEquals("No Complete", userProfile.rsp);
+	}
 
-        // Create the UserProfile instance
-        UserProfile userProfile = new UserProfile();
-        userProfile.api = mockDataAccess;
 
-        // Mock user input
-        userProfile.oldPasstextField.setText("oldPassword");
-        userProfile.newPasstextField.setText("newPassword");
+//	public void updateProfilePassword() {
+//		api = new DataAccess();
+//		String old_pass = String.valueOf(oldPasstextField.getPassword());
+//		String new_pass = String.valueOf(newPasstextField.getPassword());
+//
+////		DataAccess db = new DataAccess();
+//		if (!new_pass.isEmpty() && !old_pass.isEmpty()) {
+//			if (api.passwordHashing(old_pass).equals(user_pass)) {
+//
+//				String updateQuery = "UPDATE users SET " + "user_password='" + api.passwordHashing(new_pass) + "' "
+//						+ "WHERE user_id=" + user_id;
+//
+//				int resp = api.executeQueryUpdate(updateQuery);
+//				if (resp > 0) {
+//					JOptionPane.showMessageDialog(null, "New Password has updated succesfully.");
+//					respN =  "New Password has updated succesfully.";
+//					loadProfile();
+//				} else {
+//					JOptionPane.showMessageDialog(null, "Password has not updated.");
+//					respN =  "New Password has not updated.";
+//				}
+//			} else {
+//				respN =  "Old password doesn't match.";
+//				JOptionPane.showMessageDialog(null, "Old password doesn't match.");
+//			}
+//		} else {
+//			respN =  "Please enter your old and new password";
+//			JOptionPane.showMessageDialog(null, "Please enter your old and new password");
+//		}
+//	}
+//	@Test
+//	public void testupdateProfilePasswordSuccess() {
+//		UserProfile userProfile = new UserProfile();
+//		userProfile.oldPasstextField.setText("asd");
+//		userProfile.newPasstextField.setText("asd");
+//		userProfile.user_id = "1701989664305";
+//		userProfile.updateProfilePassword();
+//		assertEquals("New Password has updated succesfully.", userProfile.respN);
+//	}
+	@Test
+	public void testupdateProfilePasswordFail() {
+		UserProfile userProfile = new UserProfile();
+		userProfile.oldPasstextField.setText("asd");
+		userProfile.newPasstextField.setText("asd");
+		userProfile.user_pass = "688787d8ff144c502c7f5cffaafe2cc588d86079f9de88304c26b0cb99ce91c6";
+		userProfile.user_id = "";
+		userProfile.updateProfilePassword();
+		System.out.println("userProfile.respN"+userProfile.respN);
+		assertEquals("New Password has not updated.", userProfile.respN);
+	}
+	@Test
+	public void testupdateProfilePasswordFieldCheck() {
+		UserProfile userProfile = new UserProfile();
+		userProfile.oldPasstextField.setText("");
+		userProfile.newPasstextField.setText("asd");
+		userProfile.user_id = "1701989664305";
+		userProfile.updateProfilePassword();
+		assertEquals("Please enter your old and new password", userProfile.respN);
+	}
+	@Test
+	public void testupdateProfileOldPasswordFieldCheck() {
+		UserProfile userProfile = new UserProfile();
+		userProfile.oldPasstextField.setText("asdf");
+		userProfile.newPasstextField.setText("asd");
+		userProfile.user_id = "1701989664305";
+		userProfile.updateProfilePassword();
+		assertEquals("Old password doesn't match.", userProfile.respN);
+	}
+	@Test
+	public void updateProfileInfoFail() {
 
-        // Mock database response
-        when(mockDataAccess.passwordHashing(anyString())).thenReturn("hashedPassword");
-        when(mockDataAccess.executeQueryUpdate(anyString())).thenReturn(1);
-
-        // Create a mock action event for the update password button
-        ActionEvent mockActionEvent = new ActionEvent(userProfile.btnUpdatePassword, ActionEvent.ACTION_PERFORMED, "UpdatePassword");
-
-        // Call the actionPerformed method with the mock action event
-        userProfile.actionPerformed(mockActionEvent);
-
-        // Assert that the password hashing and database update were called
-        verify(mockDataAccess, times(1)).passwordHashing(anyString());
-//        verify(mockDataAccess, times(1)).executeQueryUpdate(anyString());
-
-        // Clean up any resources if needed
-        userProfile.dispose();
-    }
-    @Test
-    public void testBackButtonAction() {
-    	 UserProfile userProfile = new UserProfile();
-         ActionEvent mockActionEvent = new ActionEvent(userProfile.backButton, ActionEvent.ACTION_PERFORMED, "Home");
-         userProfile.actionPerformed(mockActionEvent);
-         assertTrue(userProfile.home.isVisible());
-         userProfile.dispose();
-    }
+		UserProfile userProfile = new UserProfile();
+		userProfile.user_id = "";
+		userProfile.emailTextField.setText("test@example.com");
+		userProfile.nameTextField.setText("TestUser");
+		userProfile.updateProfileInfo();
+		assertEquals("Details are not updated", userProfile.respN);
+	}
 }

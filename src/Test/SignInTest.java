@@ -1,4 +1,5 @@
 package Test;
+
 //import static org.junit.Assert.assertFalse;
 //import static org.junit.Assert.assertNotNull;
 //import static org.junit.Assert.assertTrue;
@@ -26,39 +27,43 @@ package Test;
 //}
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
+
 import src.DataAccess;
 import src.SignIn;
 
 import java.awt.event.ActionEvent;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SignInTest {
 
-    @Test
-    public void testSignInButtonAction() {
-        SignIn signIn = new SignIn();
-        signIn.textUsername.setText("asd@asdf.com");
-        signIn.textPassword.setText("asd");
-        ActionEvent mockActionEvent = new ActionEvent(signIn.buttonLogin, ActionEvent.ACTION_PERFORMED, "SignIn");
-        signIn.actionPerformed(mockActionEvent);
-        String expectedUserId = "YourValidUserId";
-        String mockResponse = expectedUserId;
-        signIn.api = new DataAccess() {
-            @Override
-            public String isUserValid(String username, String password) {
-                return mockResponse;
-            }
-        };
-        assertTrue(signIn.home.isVisible());
-        signIn.dispose();
-    }
+	@Test
+	public void testSignInButtonAction() {
+		SignIn signIn = new SignIn();
+		signIn.textUsername.setText("test@example.com");
+		signIn.textPassword.setText("asd");
+		ActionEvent mockActionEvent = new ActionEvent(signIn.buttonLogin, ActionEvent.ACTION_PERFORMED, "SignIn");
+		signIn.actionPerformed(mockActionEvent);
+		String expectedUserId = "YourValidUserId";
+		String mockResponse = expectedUserId;
+		signIn.api = new DataAccess() {
+			@Override
+			public String isUserValid(String username, String password) {
+				return mockResponse;
+			}
+		};
+		assertTrue(signIn.home.isVisible());
+		signIn.dispose();
+	}
 
-    @Test
-    public void testSignUpButtonAction() {
-        SignIn signIn = new SignIn();
-        ActionEvent mockActionEvent = new ActionEvent(signIn.buttonSignup, ActionEvent.ACTION_PERFORMED, "SignUp");
-        signIn.actionPerformed(mockActionEvent);
-        System.out.println("asd"+signIn.signup);
-        assertTrue(signIn.signup.isVisible());
-        signIn.dispose();
-    }
+	@Test
+	public void testSignUpButtonAction() {
+		SignIn signIn = new SignIn();
+		ActionEvent mockActionEvent = new ActionEvent(signIn.buttonSignup, ActionEvent.ACTION_PERFORMED, "SignUp");
+		signIn.actionPerformed(mockActionEvent);
+		System.out.println("asd" + signIn.signup);
+		assertTrue(signIn.signup.isVisible());
+		signIn.dispose();
+	}
 }

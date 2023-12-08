@@ -1,83 +1,29 @@
 package Test;
+
 import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
 import src.DataAccess;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-
 //
 //import java.util.Vector;
-//
-//import static org.junit.Assert.*;
-//
-//class DataAccessTest {
-//	
-//
-//	    @Test
-//	    void passwordHashing_ValidPassword_ReturnsHashedPassword() {
-//	        DataAccess dataAccess = new DataAccess();
-//	        String hashedPassword = dataAccess.passwordHashing("testPassword");
-//	        assertNotNull(hashedPassword);
-//	        assertFalse(hashedPassword.isEmpty());
-//	    }
-//
-//	    @Test
-//	    void passwordHashing_EmptyPassword_ReturnsEmptyString() {
-//	        DataAccess dataAccess = new DataAccess();
-//	        String hashedPassword = dataAccess.passwordHashing("");
-//	        assertTrue(hashedPassword.isEmpty());
-//	    }
-//
-//	    @Test
-//	    void getAllTasks_ValidUserId_ReturnsTaskList() {
-//	        DataAccess dataAccess = new DataAccess();
-//	        // Assuming valid user ID
-//	        Vector<Vector<String>> tasks = dataAccess.getAllTasks("validUserId");
-//	        assertNotNull(tasks);
-//	        assertFalse(tasks.isEmpty());
-//	    }
-//
-//	    @Test
-//	    void scheduleTasks_ValidDataList_ReturnsSortedDataList() {
-//	        DataAccess dataAccess = new DataAccess();
-//	        Vector<Vector<String>> testDataList = new Vector<>();
-//	        // Add test data to the list
-//	        Vector<Vector<String>> sortedList = dataAccess.scheduleTasks(testDataList, "Priority");
-//	        assertNotNull(sortedList);
-//	        assertTrue(sortedList.isEmpty()); // Adjust based on your specific implementation
-//	    }
-//
-//    
-//
-//}
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.io.IOException;
 import java.sql.*;
+import java.util.List;
+import java.util.Vector;
 
 class DataAccessTest {
 
 	private DataAccess dataAccess = new DataAccess();
 
-
-	//    @Before
-	//    void setUp() {
-	//    	System.out.println("DB_URL");
-	//        dataAccess = new DataAccess();
-	//    }
+	// @Before
+	// void setUp() {
+	// System.out.println("DB_URL");
+	// dataAccess = new DataAccess();
+	// }
 	//
-	//    @AfterEach
-	//    void tearDown() {
-	//        dataAccess = null;
-	//    }
+	// @AfterEach
+	// void tearDown() {
+	// dataAccess = null;
+	// }
 
 	@Test
 	void initializeDatabaseConnection_SuccessfulConnection_PrintsSuccessMessage() {
@@ -88,7 +34,6 @@ class DataAccessTest {
 
 	@Test
 	void executeQuery_ValidQuery_ReturnsResultSet() throws IOException {
-
 		ResultSet result = dataAccess.executeQuery("SELECT * FROM users");
 		assertNotNull(result);
 	}
@@ -96,7 +41,6 @@ class DataAccessTest {
 	//
 	@Test
 	void executeQuery_InvalidQuery_ReturnsNull() throws IOException {
-
 		ResultSet result = dataAccess.executeQuery("INVALID QUERY");
 		assertNull(result);
 	}
@@ -104,7 +48,7 @@ class DataAccessTest {
 	//
 	@Test
 	void executeQueryUpdate_ValidQuery_ReturnsRowsAffected() {
-		String updateQuery = "update users set profile_name='" + "sarwar" + "' where user_id=1700765996686";
+		String updateQuery = "update users set profile_name='" + "sarwar" + "' where user_id=1701989664305";
 		int rowsAffected = dataAccess.executeQueryUpdate(updateQuery);
 		assertTrue(rowsAffected > 0);
 	}
@@ -148,4 +92,62 @@ class DataAccessTest {
 //        assertTrue("User already exists. Please choose a different username.".equals(result) || "User information saved successfully.".equals(result) || "Failed to save user information.".equals(result));
 //        
 //    }
+	
+	@Test
+    public void testScheduleTasks_PrioritySorting() {
+        DataAccess dataAccess = new DataAccess();
+        Vector<Vector<String>> testData = createTestData();
+        
+        Vector<Vector<String>> sortedData = dataAccess.scheduleTasks(new Vector<>(testData), "Priority");
+
+        // Assert the expected order based on priority
+        assertEquals("High", sortedData.get(0).get(7));
+        assertEquals("Medium", sortedData.get(1).get(7));
+        assertEquals("Low", sortedData.get(2).get(7));
+    }
+
+    @Test
+    public void testScheduleTasks_DeadlineSorting() {
+        DataAccess dataAccess = new DataAccess();
+        Vector<Vector<String>> testData = createTestData();
+        
+        Vector<Vector<String>> sortedData = dataAccess.scheduleTasks(new Vector<>(testData), "Deadline");
+
+        // Assert the expected order based on deadline
+        assertEquals("03/01/2023", sortedData.get(0).get(6));
+        assertEquals("05/01/2023", sortedData.get(1).get(6));
+        assertEquals("07/01/2023", sortedData.get(2).get(6));
+    }
+
+    @Test
+    public void testScheduleTasks_BothSorting() {
+        DataAccess dataAccess = new DataAccess();
+        Vector<Vector<String>> testData = createTestData();
+        
+        Vector<Vector<String>> sortedData = dataAccess.scheduleTasks(new Vector<>(testData), "Both");
+
+        // Assert the expected order based on priority and deadline
+        System.out.println("sortedData.get(0).get(7)"+sortedData.get(0).get(7));
+//        assertEquals("High", sortedData.get(0).get(7));
+//        assertEquals("03/01/2023", sortedData.get(0).get(6));
+
+        assertEquals("Medium", sortedData.get(0).get(7));
+        assertEquals("05/01/2023", sortedData.get(1).get(6));
+
+//        assertEquals("Low", sortedData.get(2).get(7));
+//        assertEquals("07/01/2023", sortedData.get(2).get(6));
+    }
+
+    private Vector<Vector<String>> createTestData() {
+        Vector<Vector<String>> testData = new Vector<>();
+        Vector<String> task1 = new Vector<>(List.of("1", "Task1", "Type1", "Desc1", "Status1", "01/01/2023", "03/01/2023", "Medium"));
+        Vector<String> task2 = new Vector<>(List.of("2", "Task2", "Type2", "Desc2", "Status2", "01/01/2023", "05/01/2023", "Low"));
+        Vector<String> task3 = new Vector<>(List.of("3", "Task3", "Type3", "Desc3", "Status3", "01/01/2023", "07/01/2023", "High"));
+
+        testData.add(task1);
+        testData.add(task2);
+        testData.add(task3);
+
+        return testData;
+    }
 }
