@@ -75,9 +75,13 @@ public class SignIn extends JFrame implements ActionListener {
 			String username = textUsername.getText();
 			@SuppressWarnings("deprecation")
 			String password = textPassword.getText();
-
-			Utils utils = new Utils();
-			boolean email_verified = utils.isEmailValid(username);
+		   if (username == null || password == null ) {
+			   JOptionPane.showMessageDialog(null,
+						"Please fill in all fields.", "Message",
+						JOptionPane.INFORMATION_MESSAGE);
+				return;
+	        }
+			boolean email_verified = Utils.isEmailValid(username);
 			if (!email_verified) {
 				JOptionPane.showMessageDialog(null,
 						"Your provided email is not a valid email, Please Provide a valid email.", "Message",
@@ -89,7 +93,7 @@ public class SignIn extends JFrame implements ActionListener {
 				String resp = api.isUserValid(username, password);
 				if (!resp.isEmpty()) {
 					try {
-						utils.saveUserloggedInData(resp);
+						Utils.saveUserloggedInData(resp);
 					} catch (IOException e) {
 						e.printStackTrace();
 						// Handle the exception as needed

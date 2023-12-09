@@ -11,8 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.JOptionPane;
-
 public class DataAccess {
 
 	// Sign in Check
@@ -35,9 +33,9 @@ public class DataAccess {
 				return rs.getString("user_id");
 			}
 		} catch (SQLException se) {
-			se.printStackTrace();
+//			se.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		} finally {
 			DatabaseManager.closeResources(conn, pstmt, rs);
 		}
@@ -75,34 +73,13 @@ public class DataAccess {
 				return "Failed to save user information.";
 			}
 		} catch (SQLException se) {
-			se.printStackTrace();
+//			se.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		} finally {
 			DatabaseManager.closeResources(conn, pstmt, null);
 		}
 		return "";
-	}
-	// Execute Query
-	public ResultSet queryExecute(String query) {
-		Connection conn = null;
-		Statement stm = null;
-		ResultSet rs = null;	
-		try {
-			conn = DatabaseManager.getConnection();
-			stm = conn.createStatement();
-	        rs = stm.executeQuery(query);
-	        System.out.println("ResultSetResultSet: "+ rs.next() + query);
-			//
-			return rs;
-		} catch (SQLException se) {
-			se.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			DatabaseManager.closeResources(conn, stm, null);
-		}
-		return null;
 	}
 	// Update Query
 	public boolean queryUpdate(String query) {
@@ -118,9 +95,9 @@ public class DataAccess {
 				return true;
 			return false;
 		} catch (SQLException se) {
-			se.printStackTrace();
+//			se.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		} finally {
 			DatabaseManager.closeResources(conn, stm, null);
 		}
@@ -154,9 +131,9 @@ public class DataAccess {
 			return dataList;
 
 		} catch (SQLException se) {
-			se.printStackTrace();
+//			se.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		} finally {
 			DatabaseManager.closeResources(conn, stm, null);
 		}
@@ -167,7 +144,6 @@ public class DataAccess {
 		Collections.sort(dataList, new SortComparator(sort_by));
 		return dataList;
 	}
-
 }
 
 //

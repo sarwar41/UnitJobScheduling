@@ -4,8 +4,11 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 //import java.util.Vector;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -112,24 +115,60 @@ public class UserProfile extends JFrame implements ActionListener {
 
 	}
 
-	//
+//	//
+//	public void loadProfile() {
+//		ResultSet rs = null;
+//		try {
+//			DataAccess api = new DataAccess();
+//			String query = "select user_name, profile_name, user_password from users WHERE user_id = '" + user_id
+//					+ "' ";
+//			rs = api.queryExecute(query);
+//			if (rs.next()) {
+//				user_pass = rs.getString("user_password");
+//				nameTextField.setText(rs.getString("profile_name"));
+//				emailTextField.setText(rs.getString("user_name"));
+//				rsp = "Load Complete";
+//			} else {
+//				rsp = "No Complete";
+//			}
+//		} catch (SQLException se) {
+//			se.printStackTrace();
+//			rsp = "Error loading profile";
+//		}
+//
+//	}
 	public void loadProfile() {
 		try {
-			DataAccess api = new DataAccess();
 			String query = "select user_name, profile_name, user_password from users WHERE user_id = '" + user_id
 					+ "' ";
-			ResultSet rs = api.queryExecute(query);
-			if (rs.next()) {
-				user_pass = rs.getString("user_password");
-				nameTextField.setText(rs.getString("profile_name"));
-				emailTextField.setText(rs.getString("user_name"));
-				rsp = "Load Complete";
-			} else {
-				rsp = "No Complete";
+			Connection conn = null;
+			Statement stm = null;
+			ResultSet rs = null;
+			try {
+				conn = DatabaseManager.getConnection();
+				stm = conn.createStatement();
+				rs = stm.executeQuery(query);
+				if (rs.next()) {
+					user_pass = rs.getString("user_password");
+					nameTextField.setText(rs.getString("profile_name"));
+					emailTextField.setText(rs.getString("user_name"));
+
+					rsp = "Load Complete";
+				} else {
+					rsp = "No Complete";
+				}
+			} catch (SQLException se) {
+				se.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				// Close all resources including ResultSet
+				DatabaseManager.closeResources(conn, stm, rs);
 			}
-		} catch (Exception e) {
-//	        e.printStackTrace();  // Consider logging the exception instead of just printing the stack trace
-			rsp = "Error loading profile"; // Set an appropriate error message
+
+		} catch (Exception se) {
+			se.printStackTrace();
+			rsp = "Error loading profile";
 		}
 	}
 
@@ -139,6 +178,12 @@ public class UserProfile extends JFrame implements ActionListener {
 			DataAccess api = new DataAccess();
 			String email = emailTextField.getText();
 			String name = nameTextField.getText();
+
+			if (email == null) {
+				respN = "Please fill email";
+				return;
+			}
+
 			String updateQuery = "update users set profile_name='" + name + "', user_name='" + email
 					+ "' where user_id=" + user_id;
 
@@ -163,18 +208,18 @@ public class UserProfile extends JFrame implements ActionListener {
 	public void updateProfilePassword() {
 		try {
 			DataAccess api = new DataAccess();
-			
+
 			String old_pass = String.valueOf(oldPasstextField.getPassword());
 			String new_pass = String.valueOf(newPasstextField.getPassword());
 
 			if (!new_pass.isEmpty() && !old_pass.isEmpty()) {
 				if (Utils.passwordHashing(old_pass).equals(user_pass)) {
 
-					String updateQuery = "UPDATE users SET " + "user_password='" + Utils.passwordHashing(new_pass) + "' "
-							+ "WHERE user_id=" + user_id;
+					String updateQuery = "UPDATE users SET " + "user_password='" + Utils.passwordHashing(new_pass)
+							+ "' " + "WHERE user_id=" + user_id;
 
 					boolean resp = api.queryUpdate(updateQuery);
-					if (resp){
+					if (resp) {
 						respN = "New Password has updated succesfully.";
 						JOptionPane.showMessageDialog(null, respN);
 						loadProfile();
@@ -195,7 +240,7 @@ public class UserProfile extends JFrame implements ActionListener {
 //	        e.printStackTrace();  // Consider logging the exception instead of just printing the stack trace
 //			rsp = "Details are not updated"; // Set an appropriate error message
 		}
-		
+
 	}
 
 	//

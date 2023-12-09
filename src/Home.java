@@ -3,7 +3,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -310,6 +309,7 @@ public class Home extends JFrame implements ActionListener {
 //		}
 	//
 	public void addJob() {
+		
 		String name = taskNameField.getText();
 		String type = taskTypeField.getText();
 		String startdate = dateToString(stDate.getDate());
@@ -323,6 +323,11 @@ public class Home extends JFrame implements ActionListener {
 				rsp = "please login to add data";
 				return;
 			}
+			// Check for null values before proceeding
+	        if (name == null || type == null || startdate == null || enddate == null || status == null || priority == null || description == null) {
+	            rsp = "Please fill in all fields.";
+	            return;
+	        }
 			DataAccess api = new DataAccess();
 			String insertQuery = "INSERT INTO tasks (name, type, startdate, enddate, status, priority, description, user_id) "
 					+ "VALUES ('" + name + "', '" + type + "', '" + startdate + "', '" + enddate + "', '" + status
@@ -343,6 +348,7 @@ public class Home extends JFrame implements ActionListener {
 			e.printStackTrace();
 		}
 	}
+	
 
 	//
 	public void updateJob() {
@@ -430,6 +436,9 @@ public class Home extends JFrame implements ActionListener {
 	}
 	// Date to String
 	public String dateToString(Date val) {
+		if (val == null) {
+	        return "";
+	    }
 		Date selectedDate = val;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		String formattedDate = dateFormat.format(selectedDate);

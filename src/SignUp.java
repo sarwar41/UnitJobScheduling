@@ -105,8 +105,10 @@ public class SignUp extends JFrame implements ActionListener {
 	public void handleSignUpButton(String username, String password, String profileName) {
 		if (username.isEmpty()) {
 			showMessage("Please enter your email address.");
+			return ;
 		} else if (password.isEmpty()) {
 			showMessage("Please enter your password.");
+			return ;
 		} else {
 			boolean emailVerified = Utils.isEmailValid(username);
 			if (!emailVerified) {
