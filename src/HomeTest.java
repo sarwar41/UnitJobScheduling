@@ -121,7 +121,7 @@ public class HomeTest {
 	public void testDeleteJobSuccess() {
 		//delete job success
 		Home home = new Home();
-		home.sel_task_id = 215;   // need to change id to check ////////////////////////////////////////
+		home.sel_task_id = 217;   // need to change id to check ////////////////////////////////////////
 		home.deleteJob();
 		assertEquals("Task has deleted Successfully", home.rsp);
 	}

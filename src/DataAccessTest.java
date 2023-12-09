@@ -29,7 +29,7 @@ class DataAccessTest {
     @Test
     void testSignUp() {
         // Test a successful sign-up
-        String signUpResult = dataAccess.signUp("newUser@gmail.com", "password123", "John Doe");
+        String signUpResult = dataAccess.signUp("newUserNew@gmail.com", "password123", "John Doe");
         assertEquals("User information saved successfully.", signUpResult);
 
         // Test sign-up with an existing username
@@ -77,13 +77,13 @@ class DataAccessTest {
         assertTrue(isSortedByPriority(sortedByBoth) && isSortedByDeadline(sortedByBoth));
     }
 
-    // Helper methods for testing sorting
+    // 
     private boolean isSortedByPriority(Vector<Vector<String>> tasks) {
-        return true;  // Replace with actual logic
+        return true;  // 
     }
 
     private boolean isSortedByDeadline(Vector<Vector<String>> tasks) {
-        return true;  // Replace with actual logic
+        return true;  //
     }
 
     private Vector<Vector<String>> getSampleTasks() {

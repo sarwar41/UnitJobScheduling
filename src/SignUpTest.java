@@ -26,7 +26,7 @@ public class SignUpTest {
 	public void testSignUp_SuccessfulSignUp() {
 		//test sign up success
 		SignUp signUp = new SignUp();
-		signUp.textUsername.setText("testnewuser1@example.com"); // change email address .
+		signUp.textUsername.setText("testnewuser12@example.com"); // change email address .
 		signUp.textPassword.setText("password");
 		signUp.profileNameTextField.setText("TestUser");
 		ActionEvent mockActionEvent = new ActionEvent(signUp.buttonSignup, ActionEvent.ACTION_PERFORMED, "SignUp");

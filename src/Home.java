@@ -318,13 +318,11 @@ public class Home extends JFrame implements ActionListener {
 
 			boolean resp = api.queryUpdate(insertQuery);
 			if (resp) {
-				rsp = "Details are added Successfully";
-				JOptionPane.showMessageDialog(null,rsp );
+				showMessage("Details are added Successfully");
 				refreshTable();
 				clearAllInput();
 			} else {
-				rsp = "Details are not added";
-				JOptionPane.showMessageDialog(null, rsp);
+				showMessage("Details are not added");
 			}
 
 		} catch (Exception e) {
@@ -351,13 +349,12 @@ public class Home extends JFrame implements ActionListener {
 						+ "WHERE task_id=" + sel_task_id;
 				boolean resp = api.queryUpdate(updateQuery);
 				if (resp) {
-					rsp = "Details are updated Successfully";
-					JOptionPane.showMessageDialog(null,rsp );
+					showMessage("Details are updated Successfully");
+					//
 					refreshTable();
 					clearAllInput();
 				} else {
-					rsp = "Details are not updated";
-					JOptionPane.showMessageDialog(null, rsp);
+					showMessage("Details are not updated");
 				}
 				
 			} else {
@@ -383,18 +380,15 @@ public class Home extends JFrame implements ActionListener {
 
 				boolean resp = api.queryUpdate(deleteQuery);
 				if (resp) {
-					rsp = "Task has deleted Successfully";
-					JOptionPane.showMessageDialog(null,rsp );
+					showMessage("Task has deleted Successfully");
 					refreshTable();
 				} else {
-					rsp = "Task has not deleted.";
-					JOptionPane.showMessageDialog(null,rsp );
+					showMessage("Task has not deleted.");
 				}
 			}
 
 		} else {
-			rsp ="Please select a task first to delete";
-			JOptionPane.showMessageDialog(null, rsp);
+			showMessage("Please select a task first to delete");
 		}
 	}
 
@@ -448,5 +442,9 @@ public class Home extends JFrame implements ActionListener {
 		priorityDropdown.setSelectedItem(null);
 		taskDescField.setText(null);
 	}
-
+	//
+	void showMessage(String message) {
+		rsp = message;
+		JOptionPane.showMessageDialog(null, message, "Message", JOptionPane.INFORMATION_MESSAGE);
+	}
 }
