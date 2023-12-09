@@ -289,24 +289,6 @@ public class Home extends JFrame implements ActionListener {
 			e.printStackTrace();
 		}
 	}
-//	// Date to String
-//		public String dateToString(Date val) {
-//			Date selectedDate = val;
-//			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-//			String formattedDate = dateFormat.format(selectedDate);
-//			return formattedDate;
-//		}
-//		// Date to String
-//		public Date stringTODate(String val) {
-//			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-//	        try {
-//	            Date date = dateFormat.parse(val);
-//	            return date;
-//	        } catch (ParseException e) {
-//	            e.printStackTrace();
-//	            return null;
-//	        }
-//		}
 	//
 	public void addJob() {
 		
@@ -323,6 +305,7 @@ public class Home extends JFrame implements ActionListener {
 				rsp = "please login to add data";
 				return;
 			}
+			System.out.println("startdate"+startdate);
 			// Check for null values before proceeding
 	        if (name == null || type == null || startdate == null || enddate == null || status == null || priority == null || description == null) {
 	            rsp = "Please fill in all fields.";
@@ -349,7 +332,6 @@ public class Home extends JFrame implements ActionListener {
 		}
 	}
 	
-
 	//
 	public void updateJob() {
 		String name = taskNameField.getText();
@@ -448,6 +430,7 @@ public class Home extends JFrame implements ActionListener {
 	public Date stringToDate(String val) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         try {
+        
             Date date = dateFormat.parse(val);
             return date;
         } catch (ParseException e) {
@@ -457,13 +440,13 @@ public class Home extends JFrame implements ActionListener {
 	}
 	//
 	public void clearAllInput() {
-		taskNameField.setText("");
-		taskTypeField.setText("");
-		stDate.setDate(stringToDate(""));
-		enDate.setDate(stringToDate(""));
-		statusDropdown.setSelectedItem("");
-		priorityDropdown.setSelectedItem("");
-		taskDescField.setText("");
+		taskNameField.setText(null);
+		taskTypeField.setText(null);
+		stDate.setDate(null);
+		enDate.setDate(null);
+		statusDropdown.setSelectedItem(null);
+		priorityDropdown.setSelectedItem(null);
+		taskDescField.setText(null);
 	}
 
 }

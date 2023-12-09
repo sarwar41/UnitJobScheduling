@@ -1,5 +1,4 @@
 
-
 import javax.swing.*;
 import java.awt.Color;
 import java.awt.Image;
@@ -17,6 +16,7 @@ public class SignIn extends JFrame implements ActionListener {
 	public DataAccess api;
 	public SignUp signup;
 	public Home home;
+	public String resp = null;
 
 	public SignIn() {
 		panel = new JPanel();
@@ -75,37 +75,31 @@ public class SignIn extends JFrame implements ActionListener {
 			String username = textUsername.getText();
 			@SuppressWarnings("deprecation")
 			String password = textPassword.getText();
-		   if (username == null || password == null ) {
-			   JOptionPane.showMessageDialog(null,
-						"Please fill in all fields.", "Message",
-						JOptionPane.INFORMATION_MESSAGE);
+			System.out.println("username" + username + password);
+
+			if (username.isEmpty() || password.isEmpty()) {
+				showMessage("Please fill in all fields.");
 				return;
-	        }
+			}
 			boolean email_verified = Utils.isEmailValid(username);
 			if (!email_verified) {
-				JOptionPane.showMessageDialog(null,
-						"Your provided email is not a valid email, Please Provide a valid email.", "Message",
-						JOptionPane.INFORMATION_MESSAGE);
+
+				showMessage("Your provided email is not a valid email, Please Provide a valid email.");
 				return;
 			}
 			try {
 				api = new DataAccess();
 				String resp = api.isUserValid(username, password);
 				if (!resp.isEmpty()) {
-					try {
-						Utils.saveUserloggedInData(resp);
-					} catch (IOException e) {
-						e.printStackTrace();
-						// Handle the exception as needed
-					}
+					Utils.saveUserloggedInData(resp);
 					home = new Home();
 					home.setVisible(true);
 					SignIn.this.setVisible(false);
 				} else {
-					JOptionPane.showMessageDialog(null, "You've entered wrong email and password", "Message",
-							JOptionPane.INFORMATION_MESSAGE);
+					showMessage("You've provided wrong email and password");
+
 				}
-			}catch(Exception ex){
+			} catch (Exception ex) {
 			}
 
 		}
@@ -116,5 +110,11 @@ public class SignIn extends JFrame implements ActionListener {
 			SignIn.this.setVisible(false);
 		}
 
+	}
+
+	//
+	void showMessage(String message) {
+		resp = message;
+		JOptionPane.showMessageDialog(null, message, "Message", JOptionPane.INFORMATION_MESSAGE);
 	}
 }

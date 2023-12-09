@@ -103,13 +103,10 @@ public class SignUp extends JFrame implements ActionListener {
 
 	//
 	public void handleSignUpButton(String username, String password, String profileName) {
-		if (username.isEmpty()) {
-			showMessage("Please enter your email address.");
+		if (username.isEmpty() || password.isEmpty()) {
+			showMessage("Please fill in all fields.");
 			return ;
-		} else if (password.isEmpty()) {
-			showMessage("Please enter your password.");
-			return ;
-		} else {
+		}else {
 			boolean emailVerified = Utils.isEmailValid(username);
 			if (!emailVerified) {
 				showMessage("Your provided email is not a valid email. Please provide a valid email.");
@@ -122,6 +119,7 @@ public class SignUp extends JFrame implements ActionListener {
 	}
 	//
 	void showMessage(String message) {
+		resp = message;
 		JOptionPane.showMessageDialog(null, message, "Message", JOptionPane.INFORMATION_MESSAGE);
 	}
 }
