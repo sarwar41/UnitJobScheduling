@@ -4,6 +4,9 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -25,6 +28,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTextArea;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import com.toedter.calendar.JDateChooser;
 
 public class Home extends JFrame implements ActionListener {
 
@@ -45,7 +49,7 @@ public class Home extends JFrame implements ActionListener {
 	public String user_id;
 	public String rsp = null;
 	public UserProfile  userProfile;
-	
+	public JDateChooser stDate,enDate ;
 	public Home() {
 		//load user_id
 		user_id = Utils.loadUserloggedInData();
@@ -152,17 +156,26 @@ public class Home extends JFrame implements ActionListener {
 		taskStartLabel.setBounds(530, 194, 100, 30);
 		getContentPane().add(taskStartLabel);
 
-		taskStartField = new JTextField();
-		taskStartField.setBounds(530, 232, 200, 30);
-		getContentPane().add(taskStartField);
-
+//		taskStartField = new JTextField();
+//		taskStartField.setBounds(530, 232, 200, 30);
+//		getContentPane().add(taskStartField);
+		stDate = new JDateChooser();
+		stDate.setBounds(530, 232, 200, 30);
+		stDate.setSize(200,20);
+		getContentPane().add(stDate);
+		//
 		taskEndLabel = new JLabel(" End Date: ");
 		taskEndLabel.setBounds(764, 194, 100, 30);
 		getContentPane().add(taskEndLabel);
-
-		taskEndField = new JTextField();
-		taskEndField.setBounds(764, 232, 200, 30);
-		getContentPane().add(taskEndField);
+		
+		
+		enDate = new JDateChooser();
+		enDate.setBounds(764, 232, 200, 30);
+		enDate.setSize(200,20);
+		getContentPane().add(enDate);
+//		taskEndField = new JTextField();
+//		taskEndField.setBounds(764, 232, 200, 30);
+//		getContentPane().add(taskEndField);
 
 		status = new JLabel(" Status: ");
 		status.setBounds(537, 264, 100, 30);
@@ -218,7 +231,8 @@ public class Home extends JFrame implements ActionListener {
 					// Get data from the selected row
 					String taskName = (String) tableModel.getValueAt(selectedRow, 1);
 					String taskType = (String) tableModel.getValueAt(selectedRow, 2);
-					String startDate = (String) tableModel.getValueAt(selectedRow, 5);
+					
+					String startDate = (String) (tableModel.getValueAt(selectedRow, 5));
 					String endDate = (String) tableModel.getValueAt(selectedRow, 6);
 					String status = (String) tableModel.getValueAt(selectedRow, 4);
 					String priority = (String) tableModel.getValueAt(selectedRow, 7);
@@ -227,8 +241,10 @@ public class Home extends JFrame implements ActionListener {
 					// Set values in your GUI components
 					taskNameField.setText(taskName);
 					taskTypeField.setText(taskType);
-					taskStartField.setText(startDate);
-					taskEndField.setText(endDate);
+					stDate.setDate(stringToDate(startDate));
+					enDate.setDate(stringToDate(endDate));
+//					taskStartField.setText(startDate);
+//					taskEndField.setText(endDate);
 					statusDropdown.setSelectedItem(status);
 					priorityDropdown.setSelectedItem(priority);
 					taskDescField.setText(description);
@@ -274,13 +290,30 @@ public class Home extends JFrame implements ActionListener {
 			e.printStackTrace();
 		}
 	}
-
+//	// Date to String
+//		public String dateToString(Date val) {
+//			Date selectedDate = val;
+//			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+//			String formattedDate = dateFormat.format(selectedDate);
+//			return formattedDate;
+//		}
+//		// Date to String
+//		public Date stringTODate(String val) {
+//			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+//	        try {
+//	            Date date = dateFormat.parse(val);
+//	            return date;
+//	        } catch (ParseException e) {
+//	            e.printStackTrace();
+//	            return null;
+//	        }
+//		}
 	//
 	public void addJob() {
 		String name = taskNameField.getText();
 		String type = taskTypeField.getText();
-		String startdate = taskStartField.getText();
-		String enddate = taskEndField.getText();
+		String startdate = dateToString(stDate.getDate());
+		String enddate = dateToString(enDate.getDate());
 		String status = (String) statusDropdown.getSelectedItem();
 		String priority = (String) priorityDropdown.getSelectedItem();
 		String description = taskDescField.getText();
@@ -300,6 +333,7 @@ public class Home extends JFrame implements ActionListener {
 				rsp = "Details are added Successfully";
 				JOptionPane.showMessageDialog(null,rsp );
 				refreshTable();
+				clearAllInput();
 			} else {
 				rsp = "Details are not added";
 				JOptionPane.showMessageDialog(null, rsp);
@@ -314,8 +348,8 @@ public class Home extends JFrame implements ActionListener {
 	public void updateJob() {
 		String name = taskNameField.getText();
 		String type = taskTypeField.getText();
-		String startdate = taskStartField.getText();
-		String enddate = taskEndField.getText();
+		String startdate = dateToString(stDate.getDate());
+		String enddate = dateToString(enDate.getDate());
 		String status = (String) statusDropdown.getSelectedItem();
 		String priority = (String) priorityDropdown.getSelectedItem();
 		String description = taskDescField.getText();
@@ -332,6 +366,7 @@ public class Home extends JFrame implements ActionListener {
 					rsp = "Details are updated Successfully";
 					JOptionPane.showMessageDialog(null,rsp );
 					refreshTable();
+					clearAllInput();
 				} else {
 					rsp = "Details are not updated";
 					JOptionPane.showMessageDialog(null, rsp);
@@ -393,6 +428,33 @@ public class Home extends JFrame implements ActionListener {
 
 		}
 	}
-
+	// Date to String
+	public String dateToString(Date val) {
+		Date selectedDate = val;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		String formattedDate = dateFormat.format(selectedDate);
+		return formattedDate;
+	}
+	// Date to String
+	public Date stringToDate(String val) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date date = dateFormat.parse(val);
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+	}
+	//
+	public void clearAllInput() {
+		taskNameField.setText("");
+		taskTypeField.setText("");
+		stDate.setDate(stringToDate(""));
+		enDate.setDate(stringToDate(""));
+		statusDropdown.setSelectedItem("");
+		priorityDropdown.setSelectedItem("");
+		taskDescField.setText("");
+	}
 
 }

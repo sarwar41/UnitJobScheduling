@@ -90,9 +90,9 @@ public class DataAccess {
 		ResultSet rs = null;	
 		try {
 			conn = DatabaseManager.getConnection();
-			String sql = query;
 			stm = conn.createStatement();
-	        rs = stm.executeQuery(sql);
+	        rs = stm.executeQuery(query);
+	        System.out.println("ResultSetResultSet: "+ rs.next() + query);
 			//
 			return rs;
 		} catch (SQLException se) {
